@@ -74,20 +74,23 @@ public class File {
      *
      * @param name
      *        The new given name to replace the old file name.
-     *
+     * @pre  The write permission of the file must be set to true.
+     *       | if (writable == true) {
      * @pre  Name must contain supported characters, otherwise those characters will be
-     *       replaced with "_". The given name must also contain at least one character and the permission
-     *       of the file must be writable.
-     *       | if (!(isValidName(name)) && writable == true){
+     *       replaced with "_". The given name must also contain at least one character.
+     *       | if ((!isValidName(name)) && name.length() > 1) {
      *             name = correctionName(name);
-     * @post The new name of this file is equal to the given name.
+     * @post The new name of this file is equal to the given name, but unsupported characters are replaced to supported
+     *       characters.
      *       | this.name = name
      */
     public void rename(String name) {
-        if (!(isValidName(name)) && writable == true){
-            name = correctionName(name);
+        if (writable == true) {
+            if ((!isValidName(name)) && name.length() > 1) {
+                name = correctionName(name);
+            }
+            this.name = name;
         }
-        this.name = name;
     }
 
     /**
