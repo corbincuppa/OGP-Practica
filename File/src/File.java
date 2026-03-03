@@ -175,8 +175,8 @@ public class File {
         return writable;
     }
 
-    // HAS TO BE PRIVATE
-    private void setWritable(boolean writable) {
+    // HAS TO BE PRIVATE - nvm!
+    public void setWritable(boolean writable) {
         this.writable = writable;
     }
 
