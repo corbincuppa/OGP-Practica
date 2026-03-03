@@ -36,23 +36,17 @@ public class FileTest {
         fileWithSizeZero = new File("size.zero", 0, true);
         fileNonWritable = new File("non_writable", 30, false);
         //fileWithUnsupportedCharacters = new File(".;]#.#'unsupported", 10, true);
-        fileWithVERYLargeSize = new File("LARGE", 2**31, true);
-        fileWithNoParam = new File();
+        fileWithVERYLargeSize = new File("LARGE", (1 << 30) + 1, true);
+        //fileWithNoParam = new File();
 
     }
 
     @Test
     public void testConstructorStringInt_LegalCase() {
         myLittleFile = new File(".;]#.#'unsupported", 10, true);
-        assertFalse(myLittleFile.isValidName());
-        assertEquals(myLittleFile.getName(),".___.__unsupported");
-        assertEquals(myLittleFile.getName(),".___.__Unsupported");
+        assertFalse(myLittleFile.isValidName(myLittleFile.getName()));
+        assertEquals(myLittleFile.getName(), ".___.__unsupported");
+        assertEquals(myLittleFile.getName(), ".___.__Unsupported");
     }
-
-    @Test
-    public void testConstructorIntInt_NegativeContents() {
-        myLittleTanky = new OilTank(500,-250);
-        assertEquals(myLittleTanky.getCapacity(),500);
-        assertFalse(myLittleTanky.getContents(),0);
-    }
+}
 

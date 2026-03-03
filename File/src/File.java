@@ -18,9 +18,21 @@ import java.util.Date;
  * 			| isValidName(name)
  */
 public class File {
+    /**
+     * Name of the file expressed as a String.
+     */
     public String name;
+    /**
+     * Size of the file expressed as an integer number.
+     */
     private int size;
+    /**
+     * Permission to make changes to the file expressed as a boolean.
+     */
     private boolean writable;
+    /**
+     * The time of creation of the file expressed as XYZ.
+     */
     private final Date creationTime;
 
 
@@ -37,7 +49,6 @@ public class File {
      *         | result ==
      *         |            name.matches("[A-Za-z0-9._-]+") && name.length() > 1
      */
-    @Model
     public boolean isValidName(String name) {
 
         return name.matches("[A-Za-z0-9._-]+") && name.length() > 1;
@@ -89,6 +100,9 @@ public class File {
         return name;
     }
 
+    /**
+     * The max file size is the largest possible number in Java.
+     */
     private static final int max_filesize = 1 << 30; // 2^30
 
     /**
@@ -172,7 +186,7 @@ public class File {
     public File(String name) {
         this.name = name;
         this.size = 0;
-        this.writable == true;
+        this.writable = true;
         this.creationTime = new Date();
     }
 }
