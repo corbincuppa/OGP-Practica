@@ -80,16 +80,21 @@ public class File {
      *       replaced with "_". The given name must also contain at least one character.
      *       | if ((!isValidName(name)) && name.length() > 1) {
      *             name = correctionName(name);
+     * @exception NoWritingPermission
+     *            The file is not writable and therefore cannot be renamed.
+     *            | (writable == false)
      * @post The new name of this file is equal to the given name, but unsupported characters are replaced to supported
      *       characters.
      *       | this.name = name
      */
     public void rename(String name) {
-        if (writable == true) {
-            if ((!isValidName(name)) && name.length() > 1) {
-                name = correctionName(name);
-            }
-            this.name = name;
+        if (writable == false) {
+            throw new NoWritingPermission("File must be writable to be able to rename it.");
+        }
+        else{ if ((!isValidName(name)) && name.length() > 1) {
+            name = correctionName(name);
+        }}
+            this.name = name;{
         }
     }
 
@@ -175,7 +180,6 @@ public class File {
         return writable;
     }
 
-    // HAS TO BE PRIVATE - nvm!
     public void setWritable(boolean writable) {
         this.writable = writable;
     }

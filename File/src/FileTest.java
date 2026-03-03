@@ -61,6 +61,15 @@ public class FileTest {
     }
 
     @Test
+    public void testRenameException() {
+        try {
+            fileNotWritable.rename("Should.Not.Change");
+        }catch(NoWritingPermission e) {
+            System.out.println("Exception caught: " + e.getMessage());
+        }
+    }
+
+    @Test
     public void testeEnlargeNegativeAmount() {
         fileWithNormalSize.enlarge(-10);
         assertNotEquals(20, fileWithNormalSize.getSize());
