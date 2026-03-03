@@ -190,14 +190,41 @@ public class File {
         this.size = size;
     }
 
+    /**
+     * Gets the writable of this file
+     *
+     * @return The writable of this file
+     */
     public boolean isWritable() {
         return writable;
     }
 
+    /**
+     * Sets the current writable to given writable
+     *
+     * @param writable
+     *        The value of writable determines whether or not the file can be modified
+     *
+     * @post
+     * The writable of this file is the given writable
+     */
     public void setWritable(boolean writable) {
         this.writable = writable;
     }
 
+    /**
+     *Initialize a new file with given name, size, writable and current time
+     *
+     * @param name
+     *        The name of the file
+     * @param size
+     *        The size of the file
+     * @param writable
+     *        The value of writable determines whether or not the file can be modified
+     * @effect
+     * A new file is initialized with given name, size, writable and current time
+     *
+     */
     public File(String name, int size, boolean writable) {
         this.name = this.correctionName(name);
         this.size = size;
@@ -205,6 +232,15 @@ public class File {
         this.creationTime = new Date();
     }
 
+     /**
+     * Initialize a new file with given name, size = 0, writable = true and current time
+     *
+     * @param name
+     *        The name of the file
+     *
+     * @effect
+     * A new file is initialized with given name, size = 0, writable = true and current time
+     */
     public File(String name) {
         this.name = this.correctionName(name);
         this.size = 0;
