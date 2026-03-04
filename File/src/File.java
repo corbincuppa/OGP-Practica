@@ -1,5 +1,5 @@
-/*import be.kuleuven.cs.som.annotate.*;
-*/
+import be.kuleuven.cs.som.annotate.*;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
