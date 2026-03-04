@@ -316,10 +316,6 @@ public class File {
         return overlappingUsePeriod;
     }
 
-    /**
-     *
-     * @return
-     */
     public int getUsagePeriod() {
         return usagePeriod;
     }
