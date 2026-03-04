@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.*;
 
+import java.util.Date;
+
 import static java.lang.IO.print;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,16 +24,19 @@ public class FileTest {
     File fileWithNormalSize;
     File fileWithSizeZero;
     File fileNotWritable;
-
-
+    File fileWithTimeCheck;
+    File fileWithTimeCheck2;
     @BeforeEach
-    public void setupFixture() {
+    public void setupFixture() throws InterruptedException {
         fileWithSupportedCharacters = new File("AaBc._DeF-Gh", 10, true);
         fileWithUnsupportedCharacters = new File(".;]#.#'unsupported", 10, true);
         fileWithVERYLargeSize = new File("LARGE", 2147483647, true);
         fileWithNormalSize = new File("Normal_size", 30, true);
         fileWithSizeZero = new File("size.zero");
         fileNotWritable = new File("not_writable", 39, false);
+        fileWithTimeCheck = new File("creation_time",38,true);
+        Thread.sleep(1000);
+        fileWithTimeCheck2 = new File("time_check2",40, true);
     }
 
     @Test
@@ -135,6 +140,17 @@ public class FileTest {
         assertFalse(fileWithSupportedCharacters.isWritable());
         fileNotWritable.setWritable(true);
         assertTrue(fileNotWritable.isWritable());
+    }
+
+
+    @Test
+    public void testUsageOverlap() throws InterruptedException {
+    fileWithTimeCheck.enlarge(1);
+    Thread.sleep(5000);
+    fileWithTimeCheck2.enlarge(2);
+    assertTrue(fileWithTimeCheck.hasOverlappingUsePeriod(fileWithTimeCheck2));
+    assertTrue(fileWithTimeCheck2.hasOverlappingUsePeriod(fileWithTimeCheck));
+    assertFalse(fileNotWritable.hasOverlappingUsePeriod(fileWithTimeCheck));
     }
 
 }

@@ -1,6 +1,7 @@
 import be.kuleuven.cs.som.annotate.*;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A class of files involving a file name, filesize, date of creation, date of when the file was last edited,
@@ -34,6 +35,21 @@ public class File {
      * The time of creation of the file expressed as XYZ.
      */
     private final Date creationTime;
+    /**
+     * The time the files last modification expressed as XYZ
+     *
+     */
+    private Date modificationTime;
+    /**
+     *
+     */
+    private int usagePeriod;
+    /**
+     * a variable to determine the value of the dates in Ms os we can compare it with other values
+     */
+    private long creationTimeMs;
+    private long modificationTimeMs;
+    private boolean overlappingUsePeriod;
 
 
     /**
@@ -136,6 +152,8 @@ public class File {
         }
         else{if (amount > 0 && (this.size + amount) <= max_filesize) {
             this.size += amount;
+            this.modificationTime = new Date();
+            this.modificationTimeMs = this.modificationTime.getTime();
         }}
     }
 
@@ -164,6 +182,8 @@ public class File {
         else {
             if (amount > 0 && this.size - amount >= 0) {
                 this.size -= amount;
+                this.modificationTime = new Date();
+                this.modificationTimeMs = this.modificationTime.getTime();
             }
         }
     }
@@ -177,7 +197,50 @@ public class File {
     public int getSize() {
         return size;
     }
+    /**
+     * This function calculates the usageperiod of the file
+     * @pre the modification time can not equal null (no check for negative values since
+     *      it is impossible to get a negative modification time or creation time)
+     *      | modificationTime != 0
+     * @return the current usagePeriod
+     *          | result == usagePeriod
+     */
+    private long CalculateUsageperiod(long usagePeriod) {
+        if (this.modificationTime != null) {
+            usagePeriod = modificationTimeMs - creationTimeMs;
+            long days = TimeUnit.MILLISECONDS.toDays(usagePeriod);
+            long hours = TimeUnit.MILLISECONDS.toHours(usagePeriod);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(usagePeriod);
 
+
+        }
+        return usagePeriod;
+    }
+    /**
+     * This function checks if two files have an overlapping usage period
+     * @param other
+     *      the other file we need to compare with
+     *
+     * @pre the modification time has to exist
+     *      | this.modificationTime != null
+     * @pre the other file also has to have a modification time
+     *      | other.modificationTime != null
+     * @return this function returns a boolean called overlappingUsePeriod
+     *      | result == overlappingUsePeriod
+     */
+    public boolean hasOverlappingUsePeriod(File other){
+        if(this.modificationTime != null && this.modificationTimeMs > 0 && other.modificationTime != null && other.modificationTimeMs > 0){
+            if(this.creationTime.before(other.creationTime) && this.modificationTime.before(other.modificationTime)){
+                this.overlappingUsePeriod = true;
+            }
+            else if(other.creationTime.before(this.creationTime) && other.modificationTime.before(this.modificationTime)) {
+                this.overlappingUsePeriod = true;
+            }
+            else this.overlappingUsePeriod = false;
+        }
+
+        return overlappingUsePeriod;
+    }
     /**
      * Sets the current filesize to given filesize.
      *
@@ -211,6 +274,35 @@ public class File {
     public void setWritable(boolean writable) {
         this.writable = writable;
     }
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    public Date getModificationTime() {
+        return modificationTime;
+    }
+
+    public long getCreationTimeMs() {
+        return creationTimeMs;
+    }
+
+    public long getModificationTimeMs() {
+        return modificationTimeMs;
+    }
+
+    public boolean isOverlappingUsePeriod() {
+        return overlappingUsePeriod;
+    }
+
+    public int getUsagePeriod() {
+        return usagePeriod;
+    }
+
+    public void setModificationTime(Date modificationTime) {
+        this.modificationTime = modificationTime;
+    }
+
+
 
     /**
      *Initialize a new file with given name, size, writable and current time
