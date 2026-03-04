@@ -108,7 +108,7 @@ public class FileTest {
     }
     
     @Test
-    public void testConstructorLang() {
+    public void testConstructorLong() {
         assertEquals("AaBc._DeF-Gh", fileWithSupportedCharacters.getName());
         assertEquals(10, fileWithSupportedCharacters.getSize());
         assertTrue(fileWithSupportedCharacters.isWritable());
@@ -116,11 +116,11 @@ public class FileTest {
     }
 
     @Test
-    public void testConstructorKort() {
+    public void testConstructorShort() {
         assertEquals("size.zero", fileWithSizeZero.getName());
         assertEquals(0, fileWithSizeZero.getSize());
         assertTrue(fileWithSizeZero.isWritable());
-        assertNotNull(fileWithSizeZeros.getCreationTime());
+        assertNotNull(fileWithSizeZero.getCreationTime());
     }
 
     @Test
