@@ -42,7 +42,7 @@ public class File {
      *
      * @param name
      *        The name to be checked.
-     * @return True if the name is only composed of the aforementioned characters and it contains at least
+     * @return True if the name is only composed of the aforementioned characters, and it contains at least
      *         one character.
      *         False if it contains not supported characters or the length of the given name is less than
      *         one character.
@@ -88,7 +88,7 @@ public class File {
      *       | this.name = name
      */
     public void rename(String name) {
-        if (writable == false) {
+        if (!writable ) {
             throw new NoWritingPermission("File must be writable in order to rename it.");
         }
         else{ if ((!isValidName(name)) && name.length() > 1) {
@@ -131,7 +131,7 @@ public class File {
      * @post The new filesize is equal to the old filesize incremented with the given amount of bytes.
      */
     public void enlarge(int amount) {
-        if (writable == false) {
+        if (!writable) {
             throw new NoWritingPermission("File must be writable in order to enlarge it.");
         }
         else{if (amount > 0 && (this.size + amount) <= max_filesize) {
@@ -158,7 +158,7 @@ public class File {
      *      | this.size -= amount
      */
     public void shorten(int amount) {
-        if (writable == false){
+        if (!writable){
             throw new NoWritingPermission("File must be writable in order to shorten it.");
         }
         else {

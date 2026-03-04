@@ -126,10 +126,6 @@ public class FileTest {
     @Test
     public void testIsWritable() {
         assertTrue(fileWithSupportedCharacters.isWritable());
-    }
-
-    @Test
-    public void testIsWritable() {
         assertFalse(fileNotWritable.isWritable());
     }
 
