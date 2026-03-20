@@ -1,3 +1,5 @@
+package filesystem;
+
 import be.kuleuven.cs.som.annotate.*;
 
 import java.util.Date;
@@ -447,5 +449,20 @@ public class File {
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
     }
+
+
+
+    /**********************************************************
+     * file type: extensions
+     **********************************************************/
+
+    private enum Extension {
+        JAR(".jar"),
+        TXT(".txt"),
+        PDF(".pdf"),
+        JAVA(".java");
+    }
+
+
     
 }
