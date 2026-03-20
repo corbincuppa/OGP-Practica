@@ -460,7 +460,6 @@ public class File {
      * Variable registering the extension of a file.
      */
     private enum Extension {
-        JAR(".jar"),
         TXT(".txt"),
         PDF(".pdf"),
         JAVA(".java");
