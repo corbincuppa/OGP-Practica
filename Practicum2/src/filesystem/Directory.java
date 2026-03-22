@@ -3,6 +3,7 @@ package filesystem;
 import be.kuleuven.cs.som.annotate.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * A class of directories.
@@ -21,13 +22,19 @@ import java.util.Date;
  * @author  Lander Werbrouck
  * @version 2.0
  */
-public class Directory {
+public class Directory extends File {
 
     /**********************************************************
      * Constructors
      **********************************************************/
 
+    public Directory(String name, int size, boolean writable) {
+        super(name, size, writable);
+    }
 
+    public Directory(String name) {
+        super(name);
+    }
 
 
 
@@ -56,10 +63,10 @@ public class Directory {
      * @param  	name
      *			The name to be checked
      * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits, dots,
+     * 			empty and consisting only of letters, digits,
      * 			hyphens and underscores; false otherwise.
      * 			| result ==
-     * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
+     * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")
      */
     public static boolean isValidName(String name) {
         return (name != null && name.matches("[a-zA-Z_0-9-]+"));
@@ -398,5 +405,45 @@ public class Directory {
     @Raw
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
+    }
+
+
+    /**********************************************************
+     * disk items
+     **********************************************************/
+
+    /**
+     * Variable referring to the list of disk items inside a directory.
+     */
+    private List diskItems;
+
+    /**
+     * Return the number of disk items inside a directory.
+     */
+    public int getNbItems() {
+        return diskItems.size();
+    }
+
+    /**
+     * @param position
+     *        The given position
+     * Return disk item situated at the given position in the directory.
+     */
+    //public String getItemAt(int position) {}
+
+    /**
+     * @param item
+     *        The given item
+     * Checks whether or not a given item is inside the directory.
+     * @return Returns false if the given disk item is not inside the directory
+     *         and true if the given disk item is inside the directory.
+     */
+    public boolean hasAsItem(File item) {
+        if (diskItems.contains(item)) {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
