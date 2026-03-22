@@ -1,3 +1,5 @@
+package filesystem;
+
 import be.kuleuven.cs.som.annotate.*;
 
 import java.util.Date;
@@ -447,5 +449,41 @@ public class File {
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
     }
-    
+
+
+
+    /**********************************************************
+     * extension
+     **********************************************************/
+
+    /**
+     * Variable registering the extension of a file.
+     */
+    private enum Extension {
+        TXT(".txt"),
+        PDF(".pdf"),
+        JAVA(".java");
+
+        /**
+         * The file type expressed as a String.
+         */
+        private final String nameExtension;
+
+        /**
+         * Generate a new file type with a given extension name.
+         *
+         * @param nameExtension
+         */
+        private Extension(String nameExtension){
+            this.nameExtension  = nameExtension;
+        }
+
+        /**
+         * Return the extension of the file.
+         */
+        public String getExtension(){
+            return nameExtension;
+        }
+    }
+
 }
