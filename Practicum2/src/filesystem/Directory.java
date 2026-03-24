@@ -22,7 +22,7 @@ import java.util.List;
  * @author  Lander Werbrouck
  * @version 2.0
  */
-public class Directory extends File {
+public class Directory {
 
     /**********************************************************
      * Constructors
