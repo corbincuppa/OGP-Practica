@@ -3,37 +3,63 @@ package filesystem;
 import be.kuleuven.cs.som.annotate.*;
 
 import java.util.Date;
-import java.util.List;
 
-/**
- * A class of directories.
- *
- * @invar	Each directory must have a properly spelled name.
- * 			| isValidName(getName())
- * @invar	Each directory must have a valid size.
- * 			| isValidSize(getSize())
- * @invar   Each directory must have a valid creation time.
- *          | isValidCreationTime(getCreationTime())
- * @invar   Each directory must have a valid modification time.
- *          | canHaveAsModificationTime(getModificationTime())
- *
- * @author  Adelina Vozianu
- * @author  Boglárka Csorba-Vitus
- * @author  Lander Werbrouck
- * @version 2.0
- */
-public class Directory {
-
+public abstract class DiskItem {
+    /**
+     *
+     */
     /**********************************************************
      * Constructors
      **********************************************************/
 
-    public Directory(String name, int size, boolean writable) {
-        super(name, size, writable);
+    /**
+     * Initialize a new disk item with given name, size and writability.
+     *
+     * @param  	name
+     *         	The name of the new disk item.
+     * @param  	size
+     *         	The size of the new disk item.
+     * @param  	writable
+     *         	The writability of the new disk item.
+     * @effect  The name of the disk item is set to the given name.
+     * 			If the given name is not valid, a default name is set.
+     *          | setName(name)
+     * @effect	The size is set to the given size (must be valid)
+     * 			| setSize(size)
+     * @effect	The writability is set to the given flag
+     * 			| setWritable(writable)
+     * @post    The new creation time of this disk item is initialized to some time during
+     *          constructor execution.
+     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+     * @post    The new disk item has no time of last modification.
+     *          | new.getModificationTime() == null
+     *
+     * @note	The constructor is annotated raw because at the start of the execution, not all fields are
+     * 			defaulted to a value that is accepted by the invariants.
+     * 			E.g. the name is defaulted to null, which is not allowed,
+     * 			thus the object is in a raw state upon entry of the constructor.
+     */
+    @Raw
+    public DiskItem(String name, int size, boolean writable) {
+        setName(name);
+        setSize(size);
+        setWritable(writable);
     }
+    
 
-    public Directory(String name) {
-        super(name);
+    /**
+     * Initialize a new disk item with given name.
+     *
+     * @param   name
+     *          The name of the new disk item.
+     * @effect  This new disk item is initialized with the given name, a zero size
+     *          and true writability.
+     *         | this(name,0,true)
+     */
+    @Raw
+    public DiskItem(String name) {
+        this(name,0,true);
     }
 
 
@@ -43,13 +69,13 @@ public class Directory {
      **********************************************************/
 
     /**
-     * Variable referencing the name of this directory.
+     * Variable referencing the name of this disk item.
      * @note		See Coding Rule 32, for information on the initialization of fields.
      */
     private String name = null;
 
     /**
-     * Return the name of this directory.
+     * Return the name of this disk item.
      * @note		See Coding Rule 19 for the Basic annotation.
      */
     @Raw @Basic
@@ -58,28 +84,28 @@ public class Directory {
     }
 
     /**
-     * Check whether the given name is a legal name for a directory.
+     * Check whether the given name is a legal name for a disk item.
      *
      * @param  	name
      *			The name to be checked
      * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits,
+     * 			empty and consisting only of letters, digits, dots,
      * 			hyphens and underscores; false otherwise.
      * 			| result ==
-     * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")
+     * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
      */
     public static boolean isValidName(String name) {
-        return (name != null && name.matches("[a-zA-Z_0-9-]+"));
+        return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
     }
 
     /**
-     * Set the name of this directory to the given name.
+     * Set the name of this disk item to the given name.
      *
      * @param   name
-     * 			The new name for this directory.
+     * 			The new name for this disk item.
      * @post    If the given name is valid, the name of
-     *          this directory is set to the given name,
-     *          otherwise the name of the directory is set to a valid name (the default).
+     *          this disk item is set to the given name,
+     *          otherwise the name of the disk item is set to a valid name (the default).
      *          | if (isValidName(name))
      *          |      then new.getName().equals(name)
      *          |      else new.getName().equals(getDefaultName())
@@ -94,63 +120,65 @@ public class Directory {
     }
 
     /**
-     * Return the name for a new directory which is to be used when the
+     * Return the name for a new disk item which is to be used when the
      * given name is not valid.
      *
-     * @return   A valid directory name.
+     * @return   A valid disk item name.
      *         | isValidName(result)
      */
     @Model
     private static String getDefaultName() {
-        return "new_directory";
+        return "new_disk item";
     }
 
     /**
-     * Change the name of this directory to the given name.
+     * Change the name of this disk item to the given name.
      *
      * @param	name
-     * 			The new name for this directory.
-     * @effect  The name of this directory is set to the given name,
-     * 			if this is a valid name and the directory is writable,
+     * 			The new name for this disk item.
+     * @effect  The name of this disk item is set to the given name,
+     * 			if this is a valid name and the disk item is writable,
      * 			otherwise there is no change.
      * 			| if (isValidName(name) && isWritable())
      *          | then setName(name)
-     * @effect  If the name is valid and the directory is writable, the modification time
-     * 			of this directory is updated.
+     * @effect  If the name is valid and the disk item is writable, the modification time
+     * 			of this disk item is updated.
      *          | if (isValidName(name) && isWritable())
      *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException(this)
-     *          This directory is not writable
+     * @throws  DiskItemNotWritableException(this)
+     *          This disk item is not writable
      *          | ! isWritable()
      */
-    public void changeName(String name) throws DirectoryNotWritableException {
+    public void changeName(String name) throws DiskItemNotWritableException {
         if (isWritable()) {
             if (isValidName(name)){
                 setName(name);
                 setModificationTime();
             }
         } else {
-            throw new DirectoryNotWritableException(this);
+            throw new DiskItemNotWritableException(this);
         }
     }
+
+
 
     /**********************************************************
      * size - nominal programming
      **********************************************************/
 
     /**
-     * Variable registering the size of this directory (in bytes).
+     * Variable registering the size of this disk item (in bytes).
      */
     private int size = 0;
 
     /**
-     * Variable registering the maximum size of any directory (in bytes).
+     * Variable registering the maximum size of any disk item (in bytes).
      */
     private static final int maximumSize = Integer.MAX_VALUE;
 
 
     /**
-     * Return the size of this directory (in bytes).
+     * Return the size of this disk item (in bytes).
      */
     @Raw @Basic
     public int getSize() {
@@ -158,13 +186,13 @@ public class Directory {
     }
 
     /**
-     * Set the size of this directory to the given size.
+     * Set the size of this disk item to the given size.
      *
      * @param  size
-     *         The new size for this directory.
+     *         The new size for this disk item.
      * @pre    The given size must be legal.
      *         | isValidSize(size)
-     * @post   The given size is registered as the size of this directory.
+     * @post   The given size is registered as the size of this disk item.
      *         | new.getSize() == size
      */
     @Raw @Model
@@ -173,7 +201,7 @@ public class Directory {
     }
 
     /**
-     * Return the maximum directory size.
+     * Return the maximum disk item size.
      */
     @Basic @Immutable
     public static int getMaximumSize() {
@@ -181,7 +209,7 @@ public class Directory {
     }
 
     /**
-     * Check whether the given size is a valid size for a directory.
+     * Check whether the given size is a valid size for a disk item.
      *
      * @param  size
      *         The size to check.
@@ -194,58 +222,58 @@ public class Directory {
     }
 
     /**
-     * Increases the size of this directory with the given delta.
+     * Increases the size of this disk item with the given delta.
      *
      * @param   delta
-     *          The amount of bytes by which the size of this directory
+     *          The amount of bytes by which the size of this disk item
      *          must be increased.
      * @pre     The given delta must be strictly positive.
      *          | delta > 0
-     * @effect  The size of this directory is increased with the given delta.
+     * @effect  The size of this disk item is increased with the given delta.
      *          | changeSize(delta)
      */
-    public void enlarge(int delta) throws DirectoryNotWritableException {
+    public void enlarge(int delta) throws DiskItemNotWritableException {
         changeSize(delta);
     }
 
     /**
-     * Decreases the size of this directory with the given delta.
+     * Decreases the size of this disk item with the given delta.
      *
      * @param   delta
-     *          The amount of bytes by which the size of this directory
+     *          The amount of bytes by which the size of this disk item
      *          must be decreased.
      * @pre     The given delta must be strictly positive.
      *          | delta > 0
-     * @effect  The size of this directory is decreased with the given delta.
+     * @effect  The size of this disk item is decreased with the given delta.
      *          | changeSize(-delta)
      */
-    public void shorten(int delta) throws DirectoryNotWritableException {
+    public void shorten(int delta) throws DiskItemNotWritableException {
         changeSize(-delta);
     }
 
     /**
-     * Change the size of this directory with the given delta.
+     * Change the size of this disk item with the given delta.
      *
      * @param  delta
-     *         The amount of bytes by which the size of this directory
+     *         The amount of bytes by which the size of this disk item
      *         must be increased or decreased.
      * @pre    The given delta must not be 0
      *         | delta != 0
-     * @effect The size of this directory is adapted with the given delta.
+     * @effect The size of this disk item is adapted with the given delta.
      *         | setSize(getSize()+delta)
      * @effect The modification time is updated.
      *         | setModificationTime()
-     * @throws DirectoryNotWritableException(this)
-     *         This directory is not writable.
+     * @throws DiskItemNotWritableException(this)
+     *         This disk item is not writable.
      *         | ! isWritable()
      */
     @Model
-    private void changeSize(int delta) throws DirectoryNotWritableException{
+    private void changeSize(int delta) throws DiskItemNotWritableException{
         if (isWritable()) {
             setSize(getSize()+delta);
             setModificationTime();
         }else{
-            throw new DirectoryNotWritableException(this);
+            throw new DiskItemNotWritableException(this);
         }
     }
 
@@ -261,7 +289,7 @@ public class Directory {
     private final Date creationTime = new Date();
 
     /**
-     * Return the time at which this directory was created.
+     * Return the time at which this disk item was created.
      */
     @Raw @Basic @Immutable
     public Date getCreationTime() {
@@ -297,8 +325,8 @@ public class Directory {
     private Date modificationTime = null;
 
     /**
-     * Return the time at which this directory was last modified, that is
-     * at which the name or size was last changed. If this directory has
+     * Return the time at which this disk item was last modified, that is
+     * at which the name or size was last changed. If this disk item has
      * not yet been modified after construction, null is returned.
      */
     @Raw @Basic
@@ -307,7 +335,7 @@ public class Directory {
     }
 
     /**
-     * Check whether this directory can have the given date as modification time.
+     * Check whether this disk item can have the given date as modification time.
      *
      * @param	date
      * 			The date to check.
@@ -326,7 +354,7 @@ public class Directory {
     }
 
     /**
-     * Set the modification time of this directory to the current time.
+     * Set the modification time of this disk item to the current time.
      *
      * @post   The new modification time is effective.
      *         | new.getModificationTime() != null
@@ -344,16 +372,16 @@ public class Directory {
     }
 
     /**
-     * Return whether this directory and the given other directory have an
+     * Return whether this disk item and the given other disk item have an
      * overlapping use period.
      *
      * @param 	other
-     *        	The other directory to compare with.
-     * @return 	False if the other directory is not effective
+     *        	The other disk item to compare with.
+     * @return 	False if the other disk item is not effective
      * 			False if the prime object does not have a modification time
-     * 			False if the other directory is effective, but does not have a modification time
-     * 			otherwise, true if and only if the open time intervals of this directory and
-     * 			the other directory overlap
+     * 			False if the other disk item is effective, but does not have a modification time
+     * 			otherwise, true if and only if the open time intervals of this disk item and
+     * 			the other disk item overlap
      *        	| if (other == null) then result == false else
      *        	| if ((getModificationTime() == null)||
      *        	|       other.getModificationTime() == null)
@@ -365,7 +393,7 @@ public class Directory {
      *        	| ! (other.getCreationTime().before(getCreationTime()) &&
      *        	|	 other.getModificationTime().before(getCreationTime()) )
      */
-    public boolean hasOverlappingUsePeriod(Directory other) {
+    public boolean hasOverlappingUsePeriod(DiskItem other) {
         if (other == null) return false;
         if(getModificationTime() == null || other.getModificationTime() == null) return false;
         return ! (getCreationTime().before(other.getCreationTime()) &&
@@ -381,12 +409,12 @@ public class Directory {
      **********************************************************/
 
     /**
-     * Variable registering whether or not this directory is writable.
+     * Variable registering whether or not this disk item is writable.
      */
     private boolean isWritable = true;
 
     /**
-     * Check whether this directory is writable.
+     * Check whether this disk item is writable.
      */
     @Basic
     public boolean isWritable() {
@@ -394,56 +422,16 @@ public class Directory {
     }
 
     /**
-     * Set the writability of this directory to the given writability.
+     * Set the writability of this disk item to the given writability.
      *
      * @param isWritable
      *        The new writability
      * @post  The given writability is registered as the new writability
-     *        for this directory.
+     *        for this disk item.
      *        | new.isWritable() == isWritable
      */
     @Raw
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
-    }
-
-
-    /**********************************************************
-     * disk items
-     **********************************************************/
-
-    /**
-     * Variable referring to the list of disk items inside a directory.
-     */
-    private List diskItems;
-
-    /**
-     * Return the number of disk items inside a directory.
-     */
-    public int getNbItems() {
-        return diskItems.size();
-    }
-
-    /**
-     * @param position
-     *        The given position
-     * Return disk item situated at the given position in the directory.
-     */
-    //public String getItemAt(int position) {}
-
-    /**
-     * @param item
-     *        The given item
-     * Checks whether or not a given item is inside the directory.
-     * @return Returns false if the given disk item is not inside the directory
-     *         and true if the given disk item is inside the directory.
-     */
-    public boolean hasAsItem(File item) {
-        if (diskItems.contains(item)) {
-            return true;
-        }
-        else{
-            return false;
-        }
     }
 }
