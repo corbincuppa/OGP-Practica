@@ -1,7 +1,6 @@
 package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
-
 import java.util.Date;
 
 public abstract class DiskItem {
@@ -40,8 +39,8 @@ public abstract class DiskItem {
      * 			E.g. the name is defaulted to null, which is not allowed,
      * 			thus the object is in a raw state upon entry of the constructor.
      */
-    @Raw
-    public DiskItem(String name, int size, boolean writable) {
+    @Raw @Model
+    protected DiskItem(String name, int size, boolean writable) {
         setName(name);
         setSize(size);
         setWritable(writable);
@@ -57,8 +56,8 @@ public abstract class DiskItem {
      *          and true writability.
      *         | this(name,0,true)
      */
-    @Raw
-    public DiskItem(String name) {
+    @Raw @Model
+    protected DiskItem(String name) {
         this(name,0,true);
     }
 
@@ -128,7 +127,7 @@ public abstract class DiskItem {
      */
     @Model
     private static String getDefaultName() {
-        return "new_disk item";
+        return "new_diskItem";
     }
 
     /**
@@ -367,7 +366,7 @@ public abstract class DiskItem {
      *         |                    (new System).currentTimeMillis())
      */
     @Model
-    private void setModificationTime() {
+    protected void setModificationTime() {
         modificationTime = new Date();
     }
 
