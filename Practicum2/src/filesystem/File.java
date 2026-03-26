@@ -19,8 +19,6 @@ import be.kuleuven.cs.som.annotate.*;
  * @author  Boglárka Csorba-Vitus
  * @author  Lander Werbrouck
  * @version 2.0
- *
- * @note		See Coding Rule 48 for more info on the encapsulation of class invariants.
  */
 public class File extends DiskItem {
 
