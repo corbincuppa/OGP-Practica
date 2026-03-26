@@ -1,7 +1,7 @@
 package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A class of directories.
@@ -41,21 +41,6 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Variable referencing the name of this directory.
-     * @note		See Coding Rule 32, for information on the initialization of fields.
-     */
-    private String name = null;
-
-    /**
-     * Return the name of this directory.
-     * @note		See Coding Rule 19 for the Basic annotation.
-     */
-    @Raw @Basic
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Check whether the given name is a legal name for a directory.
      *
      * @param  	name
@@ -70,66 +55,21 @@ public class Directory extends DiskItem {
         return (name != null && name.matches("[a-zA-Z_0-9-]+"));
     }
 
-    /**
-     * Set the name of this directory to the given name.
-     *
-     * @param   name
-     * 			The new name for this directory.
-     * @post    If the given name is valid, the name of
-     *          this directory is set to the given name,
-     *          otherwise the name of the directory is set to a valid name (the default).
-     *          | if (isValidName(name))
-     *          |      then new.getName().equals(name)
-     *          |      else new.getName().equals(getDefaultName())
-     */
-    @Raw @Model
-    private void setName(String name) {
-        if (isValidName(name)) {
-            this.name = name;
-        } else {
-            this.name = getDefaultName();
-        }
-    }
 
+    /**********************************************************
+     * size - nominal programming
+     **********************************************************/
     /**
-     * Return the name for a new directory which is to be used when the
-     * given name is not valid.
-     *
-     * @return   A valid directory name.
-     *         | isValidName(result)
+     * Return the size of this disk item (in bytes).
      */
-    @Model
-    private static String getDefaultName() {
-        return "new_directory";
-    }
-
-    /**
-     * Change the name of this directory to the given name.
-     *
-     * @param	name
-     * 			The new name for this directory.
-     * @effect  The name of this directory is set to the given name,
-     * 			if this is a valid name and the directory is writable,
-     * 			otherwise there is no change.
-     * 			| if (isValidName(name) && isWritable())
-     *          | then setName(name)
-     * @effect  If the name is valid and the directory is writable, the modification time
-     * 			of this directory is updated.
-     *          | if (isValidName(name) && isWritable())
-     *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException(this)
-     *          This directory is not writable
-     *          | ! isWritable()
-     */
-    public void changeName(String name) throws DirectoryNotWritableException {
-        if (isWritable()) {
-            if (isValidName(name)){
-                setName(name);
-                setModificationTime();
-            }
-        } else {
-            throw new DirectoryNotWritableException(this);
+    @Raw @Basic @Override
+    public int getSize() {
+        int sum = 0;
+        for(DiskItem item: diskItems){
+            int size = item.getSize();
+            sum += size;
         }
+        return sum;
     }
 
 
@@ -141,7 +81,7 @@ public class Directory extends DiskItem {
     /**
      * Variable referring to the list of disk items inside a directory.
      */
-    private List diskItems;
+    private ArrayList<DiskItem> diskItems;
 
     /**
      * Return the number of disk items inside a directory.
@@ -151,25 +91,135 @@ public class Directory extends DiskItem {
     }
 
     /**
+     * Return disk item situated at the given position in the directory.
+     *
      * @param position
      *        The given position
-     * Return disk item situated at the given position in the directory.
      */
-    //public String getItemAt(int position) {}
+    public DiskItem getItemAt(int position) {
+        return this.diskItems.get(position+1);
+    }
 
     /**
-     * @param item
-     *        The given item
-     * Checks whether or not a given item is inside the directory.
-     * @return Returns false if the given disk item is not inside the directory
-     *         and true if the given disk item is inside the directory.
+     * Return the disk item with the given name, if the disk item
+     * is inside this directory. // throws exception if not in directory??
+     *
+     * @param nameItem
+     * @return item
+     *         The disk item with the given name which is
+     *         inside this directory.
      */
-    public boolean hasAsItem(File item) {
+    public DiskItem getItem(String nameItem) {
+        for(DiskItem item: diskItems) {
+            if (item.getName() == nameItem) {
+                return item;
+            }
+        }
+    }
+
+    /**
+     * Check whether or not this directory contains a disk item with
+     * the given name.
+     *
+     * @param name
+     *        The given name of the disk item.
+     * @return Return true if this directory contains a disk item with the given name
+     *         and returns false otherwise.
+     */
+    public boolean containsDiskItemWithName(String name) {
+        if (diskItems.contains(this.getItem(name))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return the index in the directory of the given disk item.
+     * 
+     * @param item
+     *        The given disk item.
+     */
+    public int getIndex(DiskItem item) {
+        return diskItems.indexOf(item);
+    }
+
+    /**
+     * Check whether a given disk item is inside this directory.
+     *
+     * @param item
+     *        The given item.
+     * @return True if this directory contains the given disk item
+     *          and false otherwise.
+     *          | result == diskItems.contains(item)
+     */
+    public boolean hasAsItem(DiskItem item) {
         if (diskItems.contains(item)) {
             return true;
         }
-        else{
-            return false;
+        return false;
+    }
+
+    /**
+     * Adds a given disk item to this directory.
+     * // throws exception!!!!!!!!!!! DirectoryCannotHaveParentAsSelf ofzo, needs to check writabilityytytyyty
+     *  and has to like rearrange the disk items in the doirectory in alphabetical roder??
+     *
+     * @param item
+     */
+    public void addItem(DiskItem item) {
+        if (this.isWritable() == true && item.isIndirectChildOf(this) == false) {
+            diskItems.add(item);
         }
     }
+
+    private void organizeDiskItems() {
+        for (DiskItem item: diskItems) {
+            String itemName = item.getName();
+        }
+    }
+
+
+
+    /**********************************************************
+     * root
+     **********************************************************/
+
+    /**
+     * Variable registering whether this directory is a root directory.
+     */
+    private boolean root = true;
+
+    /**
+     * Check whether this directory is a root directory.
+     *
+     * @return True if this directory has no parents, false otherwise.
+     *         | result == (this.getParent() == null)
+     */
+    public boolean isRoot() {
+        if (this.getParent() == null) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+    /**********************************************************
+     * parent
+     **********************************************************/
+
+    /**
+     * Variable registering the parent of this directory. If this
+     * directory is a root directory, this directory has no parents.
+     */
+    private Directory parent;
+
+    /**
+     * Return the parent directory of this directory.
+     */
+    public Directory getParent() {
+        return this.parent;
+    }
+
 }
