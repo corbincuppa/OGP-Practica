@@ -26,117 +26,71 @@ public class Directory extends DiskItem {
      * Constructors
      **********************************************************/
 
-    public Directory(String name, int size, boolean writable) {
-        super(name, size, writable);
-    }
-
-    public Directory(String name) {
+    public  Directory(dir, String name, boolean writable){
+        //dir?
         super(name);
+        setWritable(writable);
     }
 
+    public Directory(dir, String name){
+        //dir?
+        super(name);
+        setWritable(true);
+    }
+    //--> this(...)
+
+    public Directory(String name, boolean writable){
+        //dir?
+        super(name);
+        setWritable(writable);
+    }
+    //--> this(...)
+
+    public Directory(String name){
+        //dir?
+        super(name);
+        setWritable(true);
+    }
+    //--> this(...)
 
 
     /**********************************************************
-     * name - total programming
+     * writable
      **********************************************************/
 
     /**
-     * Variable referencing the name of this directory.
-     * @note		See Coding Rule 32, for information on the initialization of fields.
+     * Variable registering whether or not this disk item is writable.
      */
-    private String name = null;
+    private boolean isWritable = true;
 
     /**
-     * Return the name of this directory.
-     * @note		See Coding Rule 19 for the Basic annotation.
+     * Check whether this disk item is writable.
      */
-    @Raw @Basic
-    public String getName() {
-        return name;
+    @Basic
+    public boolean isWritable() {
+        return isWritable;
     }
 
     /**
-     * Check whether the given name is a legal name for a directory.
+     * Set the writability of this disk item to the given writability.
      *
-     * @param  	name
-     *			The name to be checked
-     * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits,
-     * 			hyphens and underscores; false otherwise.
-     * 			| result ==
-     * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")
+     * @param isWritable
+     *        The new writability
+     * @post  The given writability is registered as the new writability
+     *        for this disk item.
+     *        | new.isWritable() == isWritable
      */
-    public static boolean isValidName(String name) {
-        return (name != null && name.matches("[a-zA-Z_0-9-]+"));
+    @Raw
+    public void setWritable(boolean isWritable) {
+        this.isWritable = isWritable;
     }
-
-    /**
-     * Set the name of this directory to the given name.
-     *
-     * @param   name
-     * 			The new name for this directory.
-     * @post    If the given name is valid, the name of
-     *          this directory is set to the given name,
-     *          otherwise the name of the directory is set to a valid name (the default).
-     *          | if (isValidName(name))
-     *          |      then new.getName().equals(name)
-     *          |      else new.getName().equals(getDefaultName())
-     */
-    @Raw @Model
-    private void setName(String name) {
-        if (isValidName(name)) {
-            this.name = name;
-        } else {
-            this.name = getDefaultName();
-        }
-    }
-
-    /**
-     * Return the name for a new directory which is to be used when the
-     * given name is not valid.
-     *
-     * @return   A valid directory name.
-     *         | isValidName(result)
-     */
-    @Model
-    private static String getDefaultName() {
-        return "new_directory";
-    }
-
-    /**
-     * Change the name of this directory to the given name.
-     *
-     * @param	name
-     * 			The new name for this directory.
-     * @effect  The name of this directory is set to the given name,
-     * 			if this is a valid name and the directory is writable,
-     * 			otherwise there is no change.
-     * 			| if (isValidName(name) && isWritable())
-     *          | then setName(name)
-     * @effect  If the name is valid and the directory is writable, the modification time
-     * 			of this directory is updated.
-     *          | if (isValidName(name) && isWritable())
-     *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException(this)
-     *          This directory is not writable
-     *          | ! isWritable()
-     */
-    public void changeName(String name) throws DirectoryNotWritableException {
-        if (isWritable()) {
-            if (isValidName(name)){
-                setName(name);
-                setModificationTime();
-            }
-        } else {
-            throw new DirectoryNotWritableException(this);
-        }
-    }
+}
 
 
 
-    /**********************************************************
-     * disk items
-     **********************************************************/
+/**********************************************************
+ * disk items
+ **********************************************************/
 
     /**
      * Variable referring to the list of disk items inside a directory.
