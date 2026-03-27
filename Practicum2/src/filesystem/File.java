@@ -63,6 +63,29 @@ public class File extends DiskItem {
         this.extension = extension;
     }
 
+    @Raw
+    public File(String name, int size, boolean writable) {
+        super(name, size, writable);
+        extension = Extension.TXT;
+    }
+
+    @Raw
+    public File(String name) {
+        super(name);
+        extension = Extension.TXT;
+    }
+
+
+    /**
+     * Initialize a new file with given name.
+     *
+     * @param   name
+     *          The name of the new file.
+     * @effect  This new file is initialized with the given name, a zero size
+     *          and true writability.
+     *         | this(name,0,true)
+     */
+    @Raw
     public File(String name, Extension extension) {
         //dir?
         super(name);
@@ -252,3 +275,16 @@ public class File extends DiskItem {
     }
     }
 
+
+
+    /**********************************************************
+     * parent directory
+     **********************************************************/
+
+    private Directory parentDir;
+
+    protected void setParent(Directory dir) {
+        this.parentDir = dir;
+    }
+
+}

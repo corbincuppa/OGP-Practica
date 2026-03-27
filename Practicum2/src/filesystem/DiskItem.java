@@ -268,3 +268,39 @@ public abstract class DiskItem {
                 ! (other.getCreationTime().before(getCreationTime()) &&
                         other.getModificationTime().before(getCreationTime()) );
     }
+
+
+
+    /**********************************************************
+     * writable
+     **********************************************************/
+
+    /**
+     * Variable registering whether or not this disk item is writable.
+     */
+    private boolean isWritable = true;
+
+    /**
+     * Check whether this disk item is writable.
+     */
+    @Basic
+    public boolean isWritable() {
+        return isWritable;
+    }
+
+    /**
+     * Set the writability of this disk item to the given writability.
+     *
+     * @param isWritable
+     *        The new writability
+     * @post  The given writability is registered as the new writability
+     *        for this disk item.
+     *        | new.isWritable() == isWritable
+     */
+    @Raw
+    public void setWritable(boolean isWritable) {
+        this.isWritable = isWritable;
+    }
+
+    protected abstract void setParent(Directory directory);
+}

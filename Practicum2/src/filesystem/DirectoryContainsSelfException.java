@@ -12,7 +12,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author  Lander Werbrouck
  * @version 2.0
  */
-public class DirectoryNotWritableException extends RuntimeException {
+public class DirectoryContainsSelfException extends RuntimeException {
 
     /**
      * Required because this class inherits from Exception
@@ -35,25 +35,26 @@ public class DirectoryNotWritableException extends RuntimeException {
     }
 
     /**
-     * Initialize this new directory not writable exception involving the
+     * Initialize this new directory contains self exception involving the
      * given directory.
      *
      * @param	directory
-     * 			The directory for the new directory not writable exception.
+     * 			The directory for the new directory contains self exception.
      * @pre		The given directory must be a valid directory
      * 			| isValidDirectory(directory)
-     * @post	The directory involved in the new directory not writable exception
+     * @post	The directory involved in the new directory contains self exception
      * 			is set to the given directory.
      * 			| new.getDirectory() == directory
      */
-    public DirectoryNotWritableException(Directory directory) {
+    public DirectoryContainsSelfException(Directory directory) {
         this.directory = directory;
     }
 
     /**
-     * Return the directory involved in this directory not writable exception.
+     * Return the directory involved in this directory contains self exception.
      */
-    @Basic @Immutable
+    @Basic
+    @Immutable
     public Directory getDirectory() {
         return directory;
     }
