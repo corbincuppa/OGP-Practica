@@ -2,6 +2,7 @@ package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A class of directories.
@@ -30,8 +31,9 @@ public class Directory extends DiskItem {
         super(name, size, writable);
     }
 
-    public Directory(String name) {
+    public Directory(String name, ArrayList<DiskItem> listItems) {
         super(name);
+        this.diskItems = listItems;
     }
 
 
@@ -75,7 +77,7 @@ public class Directory extends DiskItem {
 
 
     /**********************************************************
-     * disk items
+     * disk items - defensive programming
      **********************************************************/
 
     /**
@@ -94,10 +96,10 @@ public class Directory extends DiskItem {
      * Return disk item situated at the given position in the directory.
      *
      * @param position
-     *        The given position
+     *        The given position starting from 0.
      */
     public DiskItem getItemAt(int position) {
-        return this.diskItems.get(position+1);
+        return this.diskItems.get(position);
     }
 
     /**
@@ -106,15 +108,16 @@ public class Directory extends DiskItem {
      *
      * @param nameItem
      * @return item
-     *         The disk item with the given name which is
-     *         inside this directory.
+     * The disk item with the given name which is
+     * inside this directory.
      */
-    public DiskItem getItem(String nameItem) {
+    public Object getItem(String nameItem) {
         for(DiskItem item: diskItems) {
             if (item.getName() == nameItem) {
                 return item;
             }
         }
+        return "Found no such item.";
     }
 
     /**
@@ -161,21 +164,96 @@ public class Directory extends DiskItem {
 
     /**
      * Adds a given disk item to this directory.
-     * // throws exception!!!!!!!!!!! DirectoryCannotHaveParentAsSelf ofzo, needs to check writabilityytytyyty
-     *  and has to like rearrange the disk items in the doirectory in alphabetical roder??
      *
-     * @param item
+     * // throws exception!!!!!!!!!!! DirectoryCannotHaveParentAsSelf ofzo, needs to check writabilityytytyyty
+     *  and has to like rearrange the disk items in the doirectory in alphabetical roder?? && item.isIndirectChildOf(this) == false
+     *  it is bidirectional, when u add item then that item get this directory as parent :P
+     * @param	item
+     * 			The item to be added to this directory.
+     * @effect  The given disk item is added to the contents of this directory
+     * 		    if this directory is writable and is not an indirect child of itself,
+     * 		    otherwise there is no change.
+     * 			| if (isWritable() && ! isDirectOrIndirectChildOf(this))
+     *          | then diskItems.add(item)
+     * @effect  If the directory is writable and the directory doesn't contain itself,
+     *          the modification time of the disk item is updated.
+     *          | if (isWritable() && ! isDirectOrIndirectChildOf(this))
+     *          | then item.setModificationTime()
+     * @throws  DirectoryNotWritableException(this)
+     *          This directory is not writable
+     *          | ! isWritable()
+     * @throws  DirectoryContainsSelfException(this)
+     *          This directory contains itself
+     *          | isDirectOrIndirectChildOf()
      */
-    public void addItem(DiskItem item) {
-        if (this.isWritable() == true && item.isIndirectChildOf(this) == false) {
-            diskItems.add(item);
+    public void addItem(DiskItem item) throws DirectoryContainsSelfException, DirectoryNotWritableException {
+        if (isWritable()) {
+            if (item.isDirectOrIndirectChildOf()) {
+                diskItems.add(item);
+                this.organiseDiskItems();
+                item.setParent(this);
+            } else {
+                throw new DirectoryContainsSelfException(this);
+            }
+        }
+        else{
+                throw new DirectoryNotWritableException(this);
+        }
+
+    }
+
+    /**
+     * Organizes the disk items in lexicographical order.
+     *
+     * @effect FEBHVYILFGWEBYILEQFVY
+     */
+    public void organizeDiskItems() {
+        for (int indexItem = 0 ; indexItem <= diskItems.size()-1 ; indexItem ++) {
+            DiskItem item1 = this.getItemAt(indexItem);
+            String itemName1 = item1.getName();
+            DiskItem item2 = this.getItemAt(indexItem + 1);
+            String itemName2 = item2.getName();
+
+            if (itemName1 != null && itemName2 != null) {
+                for (int indexChar = 0 ; itemName1.charAt(indexChar) < itemName2.charAt(indexChar);) {
+                    if (itemName1.charAt(indexChar) == itemName2.charAt(indexChar)) {
+                        indexChar ++;
+                    }
+                    if (itemName1.charAt(indexChar) > itemName2.charAt(indexChar)) {
+                        Collections.swap(diskItems, indexItem, indexItem+1);
+                    }
+                }
+            }
+
+        }
+    }
+    public void organiseDiskItems() {
+        for (int i = 0; i < diskItems.size() - 1; i++) {
+            DiskItem item1 = diskItems.get(i);
+            DiskItem item2 = diskItems.get(i + 1);
+
+            String name1 = item1.getName();
+            String name2 = item2.getName();
+
+            if (name1 != null && name2 != null) {
+                int indexChar = 0;
+
+                while (indexChar < name1.length() && indexChar < name2.length()) {
+                    if (name1.charAt(indexChar) < name2.charAt(indexChar)) {
+                        break;
+                    } else if (name1.charAt(indexChar) > name2.charAt(indexChar)) {
+                        Collections.swap(diskItems, i, i + 1);
+                        break;
+                    }
+                    indexChar++;
+                }
+            }
         }
     }
 
-    private void organizeDiskItems() {
-        for (DiskItem item: diskItems) {
-            String itemName = item.getName();
-        }
+
+    public ArrayList<DiskItem> getDiskItems() {
+        return diskItems;
     }
 
 
@@ -220,6 +298,10 @@ public class Directory extends DiskItem {
      */
     public Directory getParent() {
         return this.parent;
+    }
+
+    protected void setParent(Directory dir) {
+        this.parent = dir;
     }
 
 }

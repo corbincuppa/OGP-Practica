@@ -62,6 +62,19 @@ public class File extends DiskItem {
         this.extension = extension;
     }
 
+    @Raw
+    public File(String name, int size, boolean writable) {
+        super(name, size, writable);
+        extension = Extension.TXT;
+    }
+
+    @Raw
+    public File(String name) {
+        super(name);
+        extension = Extension.TXT;
+    }
+
+
     /**
      * Initialize a new file with given name.
      *
@@ -94,6 +107,18 @@ public class File extends DiskItem {
      */
     public String getExtension(){
         return this.extension.getExtension();
+    }
+
+
+
+    /**********************************************************
+     * parent directory
+     **********************************************************/
+
+    private Directory parentDir;
+
+    protected void setParent(Directory dir) {
+        this.parentDir = dir;
     }
 
 }

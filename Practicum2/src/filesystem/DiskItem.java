@@ -433,4 +433,6 @@ public abstract class DiskItem {
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
     }
+
+    protected abstract void setParent(Directory directory);
 }

@@ -1,8 +1,9 @@
-package filesystem;
-
 import static org.junit.Assert.*;
 import java.util.Date;
 
+import filesystem.Extension;
+import filesystem.File;
+import filesystem.FileNotWritableException;
 import org.junit.*;
 
 /**
@@ -23,11 +24,11 @@ public class FileTest {
     public void setUpFixture(){
         timeBeforeConstruction = new Date();
         fileStringIntBoolean = new File("bestand.txt",100, true);
-        fileString = new File("bestand.txt");
+        fileString = new File("bestand", Extension.TXT);
         timeAfterConstruction = new Date();
 
         timeBeforeConstructionNotWritable = new Date();
-        fileNotWritable = new File("bestand.txt",100,false);
+        fileNotWritable = new File("bestand",100,false, Extension.TXT);
         timeAfterConstructionNotWritable = new Date();
     }
 
@@ -67,7 +68,7 @@ public class FileTest {
     @Test
     public void testFileString_IllegalCase() {
         timeBeforeConstruction = new Date();
-        fileString = new File("$IllegalName$");
+        fileString = new File("$IllegalName$", Extension.TXT);
         timeAfterConstruction = new Date();
         assertTrue(File.isValidName(fileString.getName()));
         assertEquals(0,fileString.getSize());
