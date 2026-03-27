@@ -27,19 +27,36 @@ public class Directory extends DiskItem {
      * Constructors
      **********************************************************/
 
-    public Directory(String name, int size, boolean writable) {
-        super(name, size, writable);
-    }
-
-    public Directory(String name, ArrayList<DiskItem> listItems) {
+    public  Directory(dir, String name, boolean writable){
+        //dir?
         super(name);
-        this.diskItems = listItems;
+        setWritable(writable);
     }
 
+    public Directory(dir, String name){
+        //dir?
+        super(name);
+        setWritable(true);
+    }
+    //--> this(...)
+
+    public Directory(String name, boolean writable){
+        //dir?
+        super(name);
+        setWritable(writable);
+    }
+    //--> this(...)
+
+    public Directory(String name){
+        //dir?
+        super(name);
+        setWritable(true);
+    }
+    //--> this(...)
 
 
     /**********************************************************
-     * name - total programming
+     * writable
      **********************************************************/
 
     /**
@@ -52,10 +69,9 @@ public class Directory extends DiskItem {
      * 			hyphens and underscores; false otherwise.
      * 			| result ==
      * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")
+     * Variable registering whether or not this disk item is writable.
      */
-    public static boolean isValidName(String name) {
-        return (name != null && name.matches("[a-zA-Z_0-9-]+"));
-    }
+    private boolean isWritable = true;
 
 
     /**********************************************************
@@ -254,13 +270,33 @@ public class Directory extends DiskItem {
 
     public ArrayList<DiskItem> getDiskItems() {
         return diskItems;
+     * Check whether this disk item is writable.
+     */
+    @Basic
+    public boolean isWritable() {
+        return isWritable;
     }
 
+    /**
+     * Set the writability of this disk item to the given writability.
+     *
+     * @param isWritable
+     *        The new writability
+     * @post  The given writability is registered as the new writability
+     *        for this disk item.
+     *        | new.isWritable() == isWritable
+     */
+    @Raw
+    public void setWritable(boolean isWritable) {
+        this.isWritable = isWritable;
+    }
+}
 
 
-    /**********************************************************
-     * root
-     **********************************************************/
+
+/**********************************************************
+ * root
+ **********************************************************/
 
     /**
      * Variable registering whether this directory is a root directory.

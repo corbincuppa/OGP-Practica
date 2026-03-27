@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="AnnotationsDoclets">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/AnnotationsDoclets.jar!/" />
+      <root url="file://$USER_HOME$/Downloads/be" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
