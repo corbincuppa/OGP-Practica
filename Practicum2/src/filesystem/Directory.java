@@ -26,70 +26,37 @@ public class Directory extends DiskItem {
      * Constructors
      **********************************************************/
 
-    public Directory(String name, int size, boolean writable) {
-        super(name, size, writable);
-    }
-
-    public Directory(String name) {
+    public  Directory(dir, String name, boolean writable){
+        //dir?
         super(name);
+        setWritable(writable);
     }
 
+    public Directory(dir, String name){
+        //dir?
+        super(name);
+        setWritable(true);
+    }
+    //--> this(...)
 
+    public Directory(String name, boolean writable){
+        //dir?
+        super(name);
+        setWritable(writable);
+    }
+    //--> this(...)
+
+    public Directory(String name){
+        //dir?
+        super(name);
+        setWritable(true);
+    }
+    //--> this(...)
 
     /**********************************************************
      * name - total programming
      **********************************************************/
 
-    /**
-     * Variable referencing the name of this directory.
-     * @note		See Coding Rule 32, for information on the initialization of fields.
-     */
-    private String name = null;
-
-    /**
-     * Return the name of this directory.
-     * @note		See Coding Rule 19 for the Basic annotation.
-     */
-    @Raw @Basic
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Check whether the given name is a legal name for a directory.
-     *
-     * @param  	name
-     *			The name to be checked
-     * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits,
-     * 			hyphens and underscores; false otherwise.
-     * 			| result ==
-     * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")
-     */
-    public static boolean isValidName(String name) {
-        return (name != null && name.matches("[a-zA-Z_0-9-]+"));
-    }
-
-    /**
-     * Set the name of this directory to the given name.
-     *
-     * @param   name
-     * 			The new name for this directory.
-     * @post    If the given name is valid, the name of
-     *          this directory is set to the given name,
-     *          otherwise the name of the directory is set to a valid name (the default).
-     *          | if (isValidName(name))
-     *          |      then new.getName().equals(name)
-     *          |      else new.getName().equals(getDefaultName())
-     */
-    @Raw @Model
-    private void setName(String name) {
-        if (isValidName(name)) {
-            this.name = name;
-        } else {
-            this.name = getDefaultName();
-        }
-    }
 
     /**
      * Return the name for a new directory which is to be used when the
@@ -131,12 +98,45 @@ public class Directory extends DiskItem {
             throw new DirectoryNotWritableException(this);
         }
     }
-
-
+    // --> is niet nodig
 
     /**********************************************************
-     * disk items
+     * writable
      **********************************************************/
+
+    /**
+     * Variable registering whether or not this disk item is writable.
+     */
+    private boolean isWritable = true;
+
+    /**
+     * Check whether this disk item is writable.
+     */
+    @Basic
+    public boolean isWritable() {
+        return isWritable;
+    }
+
+    /**
+     * Set the writability of this disk item to the given writability.
+     *
+     * @param isWritable
+     *        The new writability
+     * @post  The given writability is registered as the new writability
+     *        for this disk item.
+     *        | new.isWritable() == isWritable
+     */
+    @Raw
+    public void setWritable(boolean isWritable) {
+        this.isWritable = isWritable;
+    }
+}
+
+
+
+/**********************************************************
+ * disk items
+ **********************************************************/
 
     /**
      * Variable referring to the list of disk items inside a directory.

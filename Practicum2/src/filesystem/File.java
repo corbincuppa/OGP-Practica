@@ -56,25 +56,21 @@ public class File extends DiskItem {
      */
     @Raw
     public File(String name, int size, boolean writable, Extension extension) {
-        super(name, size, writable);
+        //dir?
+        super(name);
+        setSize(size);
+        setWritable(writable);
         this.extension = extension;
     }
 
-    /**
-     * Initialize a new file with given name.
-     *
-     * @param   name
-     *          The name of the new file.
-     * @effect  This new file is initialized with the given name, a zero size
-     *          and true writability.
-     *         | this(name,0,true)
-     */
-    @Raw
     public File(String name, Extension extension) {
-        super(name,0,true);
+        //dir?
+        super(name);
+        setSize(0);
+        setWritable(true);
         this.extension = extension;
     }
-
+    //--> this(...)
 
 
     /**********************************************************
@@ -87,11 +83,172 @@ public class File extends DiskItem {
     public final Extension extension;
 
 
+    /**********************************************************
+     * name - total programming
+     **********************************************************/
+
     /**
-     * Return the extension of the file.
+     * Check whether the given name is a legal name for a disk item.
+     *
+     * @param  	name
+     *			The name to be checked
+     * @return	True if the given string is effective, not
+     * 			empty and consisting only of letters, digits, dots,
+     * 			hyphens and underscores; false otherwise.
+     * 			| result ==
+     * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
      */
-    public String getExtension(){
-        return this.extension.getExtension();
+    public static boolean isValidName(String name) {
+        return (super.isValidName(name) && name.matches("."));
+    }
+    // werkt wss niet  (super.isValidName(name) || (name != null && name.matches("[a-zA-Z_0-9.-]+"))
+
+
+
+    /**********************************************************
+     * size - nominal programming
+     **********************************************************/
+
+    /**
+     * Variable registering the size of this disk item (in bytes).
+     */
+    private int size = 0;
+
+    /**
+     * Variable registering the maximum size of any disk item (in bytes).
+     */
+    private static final int maximumSize = Integer.MAX_VALUE;
+
+
+    /**
+     * Return the size of this disk item (in bytes).
+     */
+    @Raw @Basic
+    public int getSize() {
+        return size;
     }
 
-}
+    /**
+     * Set the size of this disk item to the given size.
+     *
+     * @param  size
+     *         The new size for this disk item.
+     * @pre    The given size must be legal.
+     *         | isValidSize(size)
+     * @post   The given size is registered as the size of this disk item.
+     *         | new.getSize() == size
+     */
+    @Raw @Model
+    private void setSize(int size) {
+        this.size = size;
+    }
+
+    /**
+     * Return the maximum disk item size.
+     */
+    @Basic @Immutable
+    public static int getMaximumSize() {
+        return maximumSize;
+    }
+
+    /**
+     * Check whether the given size is a valid size for a disk item.
+     *
+     * @param  size
+     *         The size to check.
+     * @return True if and only if the given size is positive and does not
+     *         exceed the maximum size.
+     *         | result == ((size >= 0) && (size <= getMaximumSize()))
+     */
+    public static boolean isValidSize(int size) {
+        return ((size >= 0) && (size <= getMaximumSize()));
+    }
+
+    /**
+     * Increases the size of this disk item with the given delta.
+     *
+     * @param   delta
+     *          The amount of bytes by which the size of this disk item
+     *          must be increased.
+     * @pre     The given delta must be strictly positive.
+     *          | delta > 0
+     * @effect  The size of this disk item is increased with the given delta.
+     *          | changeSize(delta)
+     */
+    public void enlarge(int delta) throws DiskItemNotWritableException {
+        changeSize(delta);
+    }
+
+    /**
+     * Decreases the size of this disk item with the given delta.
+     *
+     * @param   delta
+     *          The amount of bytes by which the size of this disk item
+     *          must be decreased.
+     * @pre     The given delta must be strictly positive.
+     *          | delta > 0
+     * @effect  The size of this disk item is decreased with the given delta.
+     *          | changeSize(-delta)
+     */
+    public void shorten(int delta) throws DiskItemNotWritableException {
+        changeSize(-delta);
+    }
+
+    /**
+     * Change the size of this disk item with the given delta.
+     *
+     * @param  delta
+     *         The amount of bytes by which the size of this disk item
+     *         must be increased or decreased.
+     * @pre    The given delta must not be 0
+     *         | delta != 0
+     * @effect The size of this disk item is adapted with the given delta.
+     *         | setSize(getSize()+delta)
+     * @effect The modification time is updated.
+     *         | setModificationTime()
+     * @throws DiskItemNotWritableException(this)
+     *         This disk item is not writable.
+     *         | ! isWritable()
+     */
+    @Model
+    private void changeSize(int delta) throws DiskItemNotWritableException{
+        if (isWritable()) {
+            setSize(getSize()+delta);
+            setModificationTime();
+        }else{
+            throw new DiskItemNotWritableException(this);
+        }
+    }
+
+    /**********************************************************
+     * writable
+     **********************************************************/
+
+    /**
+     * Variable registering whether or not this disk item is writable.
+     */
+    private boolean isWritable = true;
+
+    /**
+     * Check whether this disk item is writable.
+     */
+    @Basic
+    public boolean isWritable() {
+        return isWritable;
+    }
+
+    /**
+     * Set the writability of this disk item to the given writability.
+     *
+     * @param isWritable
+     *        The new writability
+     * @post  The given writability is registered as the new writability
+     *        for this disk item.
+     *        | new.isWritable() == isWritable
+     */
+    @Raw
+    public void setWritable(boolean isWritable) {
+        this.isWritable = isWritable;
+    }
+    }
+
