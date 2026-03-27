@@ -53,52 +53,6 @@ public class Directory extends DiskItem {
     }
     //--> this(...)
 
-    /**********************************************************
-     * name - total programming
-     **********************************************************/
-
-
-    /**
-     * Return the name for a new directory which is to be used when the
-     * given name is not valid.
-     *
-     * @return   A valid directory name.
-     *         | isValidName(result)
-     */
-    @Model
-    private static String getDefaultName() {
-        return "new_directory";
-    }
-
-    /**
-     * Change the name of this directory to the given name.
-     *
-     * @param	name
-     * 			The new name for this directory.
-     * @effect  The name of this directory is set to the given name,
-     * 			if this is a valid name and the directory is writable,
-     * 			otherwise there is no change.
-     * 			| if (isValidName(name) && isWritable())
-     *          | then setName(name)
-     * @effect  If the name is valid and the directory is writable, the modification time
-     * 			of this directory is updated.
-     *          | if (isValidName(name) && isWritable())
-     *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException(this)
-     *          This directory is not writable
-     *          | ! isWritable()
-     */
-    public void changeName(String name) throws DirectoryNotWritableException {
-        if (isWritable()) {
-            if (isValidName(name)){
-                setName(name);
-                setModificationTime();
-            }
-        } else {
-            throw new DirectoryNotWritableException(this);
-        }
-    }
-    // --> is niet nodig
 
     /**********************************************************
      * writable
