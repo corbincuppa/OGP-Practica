@@ -53,7 +53,55 @@ public class DiskItem extends PrimitiveDiskItem{
         setName(name);
     }
 
-    // dir -> parent, naam kan wijzigen, methode was gwn al uitgewerkt.
+    @Raw @Model
+    protected DiskItem(String name) {
+        setParent(null);
+        setName(name);
+    }
+
+    @Raw @Model
+    protected DiskItem(Directory dir, String name, int size, boolean writable) {
+        setParent(dir);
+        setName(name);
+        setSize(size);
+        setWritable(writable);
+    }
+
+
+
+    /**********************************************************
+     * name - total programming
+     **********************************************************/
+
+    /**
+     * Change the name of this disk item to the given name.
+     *
+     * @param	name
+     * 			The new name for this disk item.
+     * @effect  The name of this disk item is set to the given name,
+     * 			if this is a valid name and the disk item is writable,
+     * 			otherwise there is no change.
+     * 			| if (isValidName(name) && isWritable())
+     *          | then setName(name)
+     * @effect  If the name is valid and the disk item is writable, the modification time
+     * 			of this disk item is updated.
+     *          | if (isValidName(name) && isWritable())
+     *          | then setModificationTime()
+     * @throws  DiskItemNotWritableException(this)
+     *          This disk item is not writable
+     *          | ! isWritable()
+     */
+    @Override
+    public void changeName(String name) throws DiskItemNotWritableException {
+        if (isWritable()) {
+            if (isValidName(name)){
+                setName(name);
+                setModificationTime();
+            }
+        } else {
+            throw new DiskItemNotWritableException(this);
+        }
+    }
 
 
 
@@ -227,8 +275,8 @@ public class DiskItem extends PrimitiveDiskItem{
     protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
             // als writable?
-            parent.remove(this);
-            directory.add(this);
+            //parent.remove(this);
+            //directory.add(this);
             setParent(directory);
         }
         this.parent = directory;
@@ -256,4 +304,7 @@ public class DiskItem extends PrimitiveDiskItem{
         }
         return false;
     }
+
+
+
 }

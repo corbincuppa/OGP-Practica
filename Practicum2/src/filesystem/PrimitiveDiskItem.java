@@ -95,28 +95,21 @@ public abstract class PrimitiveDiskItem {
      * @param	name
      * 			The new name for this disk item.
      * @effect  The name of this disk item is set to the given name,
-     * 			if this is a valid name and the disk item is writable,
-     * 			otherwise there is no change.
-     * 			| if (isValidName(name) && isWritable())
+     * 			if this is a valid name, otherwise there is no change.
+     * 			| if (isValidName(name))
      *          | then setName(name)
-     * @effect  If the name is valid and the disk item is writable, the modification time
+     * @effect  If the name is valid, the modification time
      * 			of this disk item is updated.
-     *          | if (isValidName(name) && isWritable())
+     *          | if (isValidName(name))
      *          | then setModificationTime()
-     * @throws  DiskItemNotWritableException(this)
-     *          This disk item is not writable
-     *          | ! isWritable()
      */
-    public void changeName(String name) throws DiskItemNotWritableException {
-        if (isWritable()) {
-            if (isValidName(name)){
-                setName(name);
-                setModificationTime();
-            }
-        } else {
-            throw new DiskItemNotWritableException(this);
+    public void changeName(String name) {
+        if (isValidName(name)) {
+            setName(name);
+            setModificationTime();
         }
     }
+
 
     /**********************************************************
      * creationTime
