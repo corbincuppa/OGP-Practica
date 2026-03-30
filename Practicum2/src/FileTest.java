@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 import java.util.Date;
 
+import filesystem.DiskItemNotWritableException;
 import filesystem.FileType;
 import filesystem.File;
 import org.junit.*;
@@ -22,12 +23,12 @@ public class FileTest {
     @Before
     public void setUpFixture(){
         timeBeforeConstruction = new Date();
-        fileStringIntBoolean = new File("bestand.txt",100, true);
+        fileStringIntBoolean = new File(null, "bestand.txt",100, true);
         fileString = new File("bestand", FileType.TXT);
         timeAfterConstruction = new Date();
 
         timeBeforeConstructionNotWritable = new Date();
-        fileNotWritable = new File("bestand",100,false, FileType.TXT);
+        fileNotWritable = new File(null, "bestand",100,false, FileType.TXT);
         timeAfterConstructionNotWritable = new Date();
     }
 
@@ -44,7 +45,7 @@ public class FileTest {
     @Test
     public void testFileStringIntBoolean_IllegalCase() {
         timeBeforeConstruction = new Date();
-        fileStringIntBoolean = new File("$IllegalName$",File.getMaximumSize(),false);
+        fileStringIntBoolean = new File(null, "$IllegalName$",File.getMaximumSize(),false);
         timeAfterConstruction = new Date();
         assertTrue(File.isValidName(fileStringIntBoolean.getName()));
         assertEquals(File.getMaximumSize(),fileStringIntBoolean.getSize());
@@ -102,8 +103,8 @@ public class FileTest {
         assertFalse(timeAfterSetName.before(fileString.getModificationTime()));
     }
 
-    @Test (expected = FileNotWritableException.class)
-    public void testChangeName_FileNotWritable() {
+    @Test (expected = DiskItemNotWritableException.class)
+    public void testChangeName_DiskItemNotWritable() {
         fileNotWritable.changeName("NewLegalName");
     }
 
@@ -131,7 +132,7 @@ public class FileTest {
 
     @Test
     public void testEnlarge_LegalCase() {
-        File file = new File("bestand.txt",File.getMaximumSize()-1,true);
+        File file = new File(null, "bestand.txt",File.getMaximumSize()-1,true);
         Date timeBeforeEnlarge = new Date();
         file.enlarge(1);
         Date timeAfterEnlarge = new Date();
@@ -141,8 +142,8 @@ public class FileTest {
         assertFalse(timeAfterEnlarge.before(file.getModificationTime()));
     }
 
-    @Test (expected = FileNotWritableException.class)
-    public void testEnlarge_FileNotWritable() {
+    @Test (expected = DiskItemNotWritableException.class)
+    public void testEnlarge_DiskItemNotWritable() {
         fileNotWritable.enlarge(1);
     }
 
@@ -156,8 +157,8 @@ public class FileTest {
         assertFalse(timeAfterShorten.before(fileStringIntBoolean.getModificationTime()));
     }
 
-    @Test (expected = FileNotWritableException.class)
-    public void testShorten_FileNotWritable() {
+    @Test (expected = DiskItemNotWritableException.class)
+    public void testShorten_DiskItemNotWritable() {
         fileNotWritable.shorten(1);
     }
 
@@ -303,8 +304,8 @@ public class FileTest {
 
     @Test
     public void testSetExtension() {
-        File fileWithExtension = new File("he",242, true, FileType.JAVA);
-        assertSame(fileWithExtension.getExtension(), ".java");
+        File fileWithExtension = new File(null, "he",242, true, FileType.JAVA);
+        assertSame(fileWithExtension.getFileType().getExtension(), ".java");
     }
 
     private void sleep() {

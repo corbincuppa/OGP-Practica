@@ -275,8 +275,8 @@ public class DiskItem extends PrimitiveDiskItem{
     protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
             // als writable?
-            //parent.remove(this);
-            //directory.add(this);
+            parent.remove(this);
+            directory.add(this);
             setParent(directory);
         }
         this.parent = directory;

@@ -48,7 +48,7 @@ public class DirectoryTest {
 
     @Test
     public void testDirDiskItemsOrganize() {
-        dir.organiseDiskItems();
+        dir.sortDiskItems();
         assertNotSame(listOfItems, dir.getDiskItems());
     }
 }

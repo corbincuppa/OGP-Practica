@@ -47,7 +47,7 @@ public abstract class PrimitiveDiskItem {
      * @param  	name
      *			The name to be checked
      * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits, dots,
+     * 			empty and consisting only of letters, digits,
      * 			hyphens and underscores; false otherwise.
      * 			| result ==
      * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")

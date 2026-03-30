@@ -28,4 +28,21 @@ public enum FileType {
     public String getExtension() {
         return extension;
     }
+
+    /**
+     * Check if this extension is a legal extension.
+     *
+     * @return	True if the given string is effective, not
+     * 			empty and consisting only of lower-case letters; false otherwise.
+     * 			| result ==
+     * 			|	(getExtension() != null) && getExtension().matches("[a-z]+")
+     */
+    protected boolean isValidExtension() {
+        if (this.getExtension() != null && this.getExtension().matches("[a-z]+")) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

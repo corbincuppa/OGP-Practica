@@ -15,9 +15,10 @@ import java.util.Collections;
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each directory must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
- * @invar   Each disk item must have a valid parent directory.
- *          | isValidParentDir()
- *              WHAT ABOUT ROOT DIRECTORY?!
+ * @invar   Each directory must have a valid parent directory, unless the
+ *          directory is a root directory.
+ *          | if !isRoot()
+ *          | then isValidParentDir()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -31,12 +32,12 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     public Directory(Directory parent, String name, boolean writable){
-        super(name);
+        super(parent, name);
         setWritable(writable);
     }
 
     public Directory(Directory parent, String name){
-        super(name);
+        super(parent, name);
         setWritable(true);
     }
 
@@ -160,9 +161,6 @@ public class Directory extends DiskItem {
     /**
      * Adds a given disk item to this directory.
      *
-     * // throws exception!!!!!!!!!!! DirectoryCannotHaveParentAsSelf ofzo, needs to check writabilityytytyyty
-     *  and has to like rearrange the disk items in the doirectory in alphabetical roder?? && item.isIndirectChildOf(this) == false
-     *  it is bidirectional, when u add item then that item get this directory as parent :P
      * @param	item
      * 			The item to be added to this directory.
      * @effect  The given disk item is added to the contents of this directory
@@ -183,9 +181,10 @@ public class Directory extends DiskItem {
      */
     public void addItem(DiskItem item) throws DirectoryContainsSelfException, DirectoryNotWritableException {
         if (isWritable()) {
-            if (item.isDirectOrIndirectChildOf()) {
+            // if (item.isDirectOrIndirectChildOf(this))
+            if (item == null) {
                 diskItems.add(item);
-                this.organiseDiskItems();
+                this.sortDiskItems();
                 item.setParent(this);
             } else {
                 throw new DirectoryContainsSelfException(this);
@@ -204,64 +203,36 @@ public class Directory extends DiskItem {
     }
 
     /**
+     *
+     * @param indexItem1
+     */
+    private void swapItems(int indexItem1) {
+        DiskItem tmp1 = this.getItemAt(indexItem1);
+        DiskItem tmp2 = this.getItemAt(indexItem1+1);
+        diskItems.set(indexItem1, tmp2);
+        diskItems.set(indexItem1+1, tmp1);
+    }
+
+    /**
      * Sort the disk items in lexicographical order.
      *
      * @effect FEBHVYILFGWEBYILEQFVY
      */
-    public void organizeDiskItems() {
-        for (int indexItem = 0 ; indexItem <= diskItems.size()-1 ; indexItem ++) {
-            DiskItem item1 = this.getItemAt(indexItem);
-            String itemName1 = item1.getName();
-            DiskItem item2 = this.getItemAt(indexItem + 1);
-            String itemName2 = item2.getName();
-
-            if (itemName1 != null && itemName2 != null) {
-                for (int indexChar = 0 ; itemName1.charAt(indexChar) < itemName2.charAt(indexChar);) {
-                    if (itemName1.charAt(indexChar) == itemName2.charAt(indexChar)) {
-                        indexChar ++;
-                    }
-                    if (itemName1.charAt(indexChar) > itemName2.charAt(indexChar)) {
-                        Collections.swap(diskItems, indexItem, indexItem+1);
-                    }
-                }
-            }
-
-        }
-    }
-
-    protected boolean noNullDir(ArrayList<DiskItem> list) {
-        for (DiskItem item: list){
-            if(item != null) {
-
-            }
-        }
-    }
-
     public void sortDiskItems() {
-        for (int i = 0 ;  ; i++) {
+        for (int pass = 0 ; pass < diskItems.size(); pass++){
+            for (int indexItem = 0 ; indexItem < diskItems.size()-1 ; indexItem++) {
+                DiskItem item1 = diskItems.get(indexItem);
+                DiskItem item2 = diskItems.get(indexItem + 1);
+                if (item1 != null && item2 != null) {
+                    String name1 = item1.getName();
+                    String name2 = item2.getName();
+                    // mogen niet dezelfde string zijn
+                    if (name1.compareToIgnoreCase(name2) == 0) {
+                        // throw new DiskItemsHaveSameNameException
+                    } else if (name1.compareToIgnoreCase(name2) > 0) {
+                        swapItems(indexItem);
 
-        }
-    }
-
-    public void organiseDiskItems() {
-        for (int i = 0; i < diskItems.size() - 1; i++) {
-            DiskItem item1 = diskItems.get(i);
-            DiskItem item2 = diskItems.get(i + 1);
-
-            String name1 = item1.getName();
-            String name2 = item2.getName();
-
-            if (name1 != null && name2 != null) {
-                int indexChar = 0;
-
-                while (indexChar < name1.length() && indexChar < name2.length()) {
-                    if (name1.charAt(indexChar) < name2.charAt(indexChar)) {
-                        break;
-                    } else if (name1.charAt(indexChar) > name2.charAt(indexChar)) {
-                        Collections.swap(diskItems, i, i + 1);
-                        break;
                     }
-                    indexChar++;
                 }
             }
         }
@@ -297,5 +268,15 @@ public class Directory extends DiskItem {
         }
 
 
+
+
+
+
+
+    public void sortList()
+    {
+        // Sorting the list using lambda function
+        this.diskItems.sort((a, b) -> a.getName().compareTo(b.getName()));
+    }
 
 }
