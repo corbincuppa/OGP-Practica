@@ -55,24 +55,24 @@ public class File extends DiskItem {
      * 			thus the object is in a raw state upon entry of the constructor.
      */
     @Raw
-    public File(String name, int size, boolean writable, Extension extension) {
+    public File(Dir parent, String name, int size, boolean writable, FileType type) {
         //dir?
-        super(name);
+        super(parent, name);
         setSize(size);
         setWritable(writable);
-        this.extension = extension;
+        this.fileType = type;
     }
 
     @Raw
     public File(String name, int size, boolean writable) {
         super(name, size, writable);
-        extension = Extension.TXT;
+        fileType = FileType.TXT;
     }
 
     @Raw
     public File(String name) {
         super(name);
-        extension = Extension.TXT;
+        fileType = FileType.TXT;
     }
 
 
@@ -86,12 +86,12 @@ public class File extends DiskItem {
      *         | this(name,0,true)
      */
     @Raw
-    public File(String name, Extension extension) {
+    public File(String name, FileType fileType) {
         //dir?
         super(name);
         setSize(0);
         setWritable(true);
-        this.extension = extension;
+        this.fileType = fileType;
     }
     //--> this(...)
 
@@ -103,7 +103,7 @@ public class File extends DiskItem {
     /**
      * Variable registering the extension of a file.
      */
-    public final Extension extension;
+    public final FileType fileType;
 
 
     /**********************************************************

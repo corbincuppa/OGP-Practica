@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import static java.lang.IO.print;
 
 void main() {
-    File file1 = new File("text", Extension.TXT);
-    File file2 = new File("people", Extension.PDF);
-    File file3 = new File("racehorse", Extension.JAVA);
-    File file4 = new File("apple", Extension.TXT);
-    File file5 = new File("happyappy", Extension.TXT);
+    File file1 = new File("text", FileType.TXT);
+    File file2 = new File("people", FileType.PDF);
+    File file3 = new File("racehorse", FileType.JAVA);
+    File file4 = new File("apple", FileType.TXT);
+    File file5 = new File("happyappy", FileType.TXT);
     Directory dir2 = new Directory("wowzers", null);
     ArrayList<DiskItem> listOfItems = new ArrayList<>();
     Directory dir = new Directory("yoopie", listOfItems);

@@ -24,11 +24,11 @@ public class DirectoryTest {
 
     @Before
     public void setUpFixture() {
-        file1 = new File("text", Extension.TXT);
-        file2 = new File("people", Extension.PDF);
-        file3 = new File("racehorse", Extension.JAVA);
-        file4 = new File("apple", Extension.TXT);
-        file5 = new File("happyappy", Extension.TXT);
+        file1 = new File("text", FileType.TXT);
+        file2 = new File("people", FileType.PDF);
+        file3 = new File("racehorse", FileType.JAVA);
+        file4 = new File("apple", FileType.TXT);
+        file5 = new File("happyappy", FileType.TXT);
         dir2 = new Dir(null, "wowzers");
         listOfItems = new ArrayList<>();
         listOfItems.add(file1);

@@ -3,7 +3,7 @@ package filesystem;
 /**
  * Enum for filetypes.
  */
-public enum Extension {
+public enum FileType {
     PDF(".pdf"),
     JAVA(".java"),
     TXT(".txt");
@@ -18,7 +18,7 @@ public enum Extension {
      * @param extension
      *        Extension of the file type.
      */
-    Extension(String extension) {
+    FileType(String extension) {
         this.extension = extension;
     }
 
