@@ -15,6 +15,9 @@ import java.util.Collections;
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each directory must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
+ * @invar   Each disk item must have a valid parent directory.
+ *          | isValidParentDir()
+ *              WHAT ABOUT ROOT DIRECTORY?!
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -218,7 +221,7 @@ public class Dir extends DiskItem {
     }
 
     /**
-     * Organizes the disk items in lexicographical order.
+     * Sort the disk items in lexicographical order.
      *
      * @effect FEBHVYILFGWEBYILEQFVY
      */
@@ -242,6 +245,19 @@ public class Dir extends DiskItem {
 
         }
     }
+
+    protected boolean noNullDir(ArrayList<DiskItem> list) {
+        for (DiskItem item: list){
+            if(item != null) {
+
+            }
+        }
+    }
+
+    public void sortDiskItems() {
+
+    }
+
     public void organiseDiskItems() {
         for (int i = 0; i < diskItems.size() - 1; i++) {
             DiskItem item1 = diskItems.get(i);
@@ -274,28 +290,6 @@ public class Dir extends DiskItem {
         return diskItems;
     }
 
-    /**
-    * Check whether this disk item is writable.
-     */
-    @Basic
-    public boolean isWritable() {
-        return isWritable;
-    }
-
-    /**
-     * Set the writability of this disk item to the given writability.
-     *
-     * @param isWritable
-     *        The new writability
-     * @post  The given writability is registered as the new writability
-     *        for this disk item.
-     *        | new.isWritable() == isWritable
-     */
-    @Raw
-    public void setWritable(boolean isWritable) {
-        this.isWritable = isWritable;
-    }
-
 
 
     /**********************************************************
@@ -311,10 +305,10 @@ public class Dir extends DiskItem {
          * Check whether this directory is a root directory.
          *
          * @return True if this directory has no parents, false otherwise.
-         *         | result == (this.getParent() == null)
+         *         | result == isValidParentDir(this.getParent())
          */
         public boolean isRoot() {
-            if (this.getParent() == null) {
+            if (isValidParentDir(this.getParent())) {
                 return true;
             }
 

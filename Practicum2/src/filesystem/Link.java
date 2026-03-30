@@ -1,4 +1,4 @@
 package filesystem;
 
-public class Link {
+public class Link extends PrimitiveDiskItem {
 }

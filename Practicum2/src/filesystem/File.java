@@ -14,6 +14,8 @@ import be.kuleuven.cs.som.annotate.*;
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each file must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
+ * @invar   Each disk item must have a valid parent directory.
+ *          | isValidParentDir()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -273,11 +275,6 @@ public class File extends DiskItem {
         this.isWritable = isWritable;
     }
 
-
-
-    /**********************************************************
-     * parent directory
-     **********************************************************/
 
 
 }
