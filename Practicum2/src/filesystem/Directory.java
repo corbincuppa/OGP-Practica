@@ -245,40 +245,6 @@ public class Directory extends DiskItem {
     }
 
     /**
-     * Remove a given item from this directory.
-     *
-     * @param   item
-     *          The given item to be removed from this directory.
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the item is removed from the contents of this directory.
-     *          | if (isWritable() && diskItems.contains(item))
-     *          | then diskItems.remove(item)
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the item's parent is set to null.
-     *          | if (isWritable() && diskItems.contains(item))
-     *          | then setParent(null)
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the modification time of this disk item is updated.
-     *          | if (isWritable() && diskItems.contains(item))
-     *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException
-     *          This directory is not writable.
-     *          | isWritable()
-     */
-    public void removeItem(DiskItem item) throws DirectoryNotWritableException {
-        if (isWritable()) {
-            if (diskItems.contains(item)) {
-                diskItems.remove(item);
-                item.setParent(null);
-                setModificationTime();
-            }
-        }
-        else{
-            throw new DirectoryNotWritableException(this);
-        }
-    }
-
-    /**
      * Add a list of disk items to this directory.
      *
      * @param list
@@ -366,7 +332,50 @@ public class Directory extends DiskItem {
 
 
 
+    /**********************************************************
+     * destructors
+     **********************************************************/
 
+    /**
+     * Remove a given item from this directory.
+     *
+     * @param   item
+     *          The given item to be removed from this directory.
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the item is removed from the contents of this directory.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then diskItems.remove(item)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the item's parent is set to null.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then setParent(null)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the modification time of this disk item is updated.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then setModificationTime()
+     * @throws  DirectoryNotWritableException
+     *          This directory is not writable.
+     *          | isWritable()
+     */
+    public void removeItem(DiskItem item) throws DirectoryNotWritableException {
+        if (isWritable()) {
+            if (diskItems.contains(item)) {
+                diskItems.remove(item);
+                item.setParent(null);
+                setModificationTime();
+            }
+        }
+        else{
+            throw new DirectoryNotWritableException(this);
+        }
+    }
+
+    /**
+     *
+     */
+    public void removeDir(Directory dir) {
+
+    }
 
 
 
