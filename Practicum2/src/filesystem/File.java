@@ -56,7 +56,6 @@ public class File extends DiskItem {
      */
     @Raw
     public File(Dir parent, String name, int size, boolean writable, FileType type) {
-        //dir?
         super(parent, name);
         setSize(size);
         setWritable(writable);
@@ -64,8 +63,8 @@ public class File extends DiskItem {
     }
 
     @Raw
-    public File(String name, int size, boolean writable) {
-        super(name, size, writable);
+    public File(Dir dir, String name, int size, boolean writable) {
+        super(dir, name, size, writable);
         fileType = FileType.TXT;
     }
 

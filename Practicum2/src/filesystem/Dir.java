@@ -211,6 +211,12 @@ public class Dir extends DiskItem {
 
     }
 
+    public void addList(ArrayList<DiskItem> list){
+        for (DiskItem item: list){
+            this.addItem(item);
+        }
+    }
+
     /**
      * Organizes the disk items in lexicographical order.
      *

@@ -4,6 +4,25 @@ import be.kuleuven.cs.som.annotate.*;
 import java.util.Date;
 
 
+/**
+ * A class of disk items.
+ *
+ * @invar	Each disk item must have a properly spelled name.
+ * 			| isValidName(getName())
+ * @invar	Each disk item must have a valid size.
+ * 			| isValidSize(getSize())
+ * @invar   Each disk item must have a valid creation time.
+ *          | isValidCreationTime(getCreationTime())
+ * @invar   Each disk item must have a valid modification time.
+ *          | canHaveAsModificationTime(getModificationTime())
+ * @invar   Each disk item must have a valid parent directory.
+ *          | isValidParentDir()
+ *
+ * @author  Adelina Vozianu
+ * @author  Boglárka Csorba-Vitus
+ * @author  Lander Werbrouck
+ * @version 2.0
+ */
 public abstract class DiskItem {
     /**
      *
@@ -314,15 +333,16 @@ public abstract class DiskItem {
     protected Dir parent;
 
     /**
-     * GEWUIPFBEWI;BF;IWPBVFPYI4ERVBYEPIBYPIVBYVG
+     * Make the parent directory of this disk item the given directory.
      *
      * @param directory
+     *        The given directory to which this disk item will be "moved".
      */
     protected void setParent(Dir directory){
-        if (this.parent != null) {
+        if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
             parent.remove(this);
             directory.add(this);
-            this.parent = directory;
+            setParent(directory);
         }
         this.parent = directory;
     }
@@ -332,5 +352,21 @@ public abstract class DiskItem {
      */
     public Dir getParent() {
         return this.parent;
+    }
+
+    /**
+     * Check if the given directory is a valid parent directory,
+     * i.e. not null.
+     *
+     * @param   dir
+     *          The given directory to check.
+     * @return  Return false if this disk item does not have a parent directory,
+     *          return true otherwise.
+     */
+    protected boolean isValidParentDir(Dir dir) {
+        if (dir != null) {
+            return true;
+        }
+        return false;
     }
 }
