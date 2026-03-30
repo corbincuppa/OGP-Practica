@@ -1,7 +1,6 @@
 package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
-import java.util.Date;
 
 
 /**
@@ -23,10 +22,8 @@ import java.util.Date;
  * @author  Lander Werbrouck
  * @version 2.0
  */
-public abstract class DiskItem extends PrimitiveDiskItem{
-    /**
-     *
-     */
+public class DiskItem extends PrimitiveDiskItem{
+
     /**********************************************************
      * Constructors
      **********************************************************/
@@ -51,24 +48,12 @@ public abstract class DiskItem extends PrimitiveDiskItem{
      * 			thus the object is in a raw state upon entry of the constructor.
      */
     @Raw @Model
-    protected DiskItem(Dir dir, String name) {
-        setDir(dir);
+    protected DiskItem(Directory dir, String name) {
+        setParent(dir);
         setName(name);
     }
 
-    /**********************************************************
-     * dir
-     **********************************************************/
-    protected Dir dir;
-
-    public Dir getDir() {
-        return dir;
-    }
-
-    public void setDir(Dir dir) {
-        // als writable?
-        this.dir = dir;
-    }
+    // dir -> parent, naam kan wijzigen, methode was gwn al uitgewerkt.
 
 
 
@@ -77,7 +62,7 @@ public abstract class DiskItem extends PrimitiveDiskItem{
      **********************************************************/
 
     /**
-     * Variable registering whether or not this disk item is writable.
+     * Variable registering whether this disk item is writable.
      */
     private boolean isWritable = true;
 
@@ -103,6 +88,126 @@ public abstract class DiskItem extends PrimitiveDiskItem{
         this.isWritable = isWritable;
     }
 
+
+
+    /**********************************************************
+     * size - nominal programming
+     **********************************************************/
+
+    /**
+     * Variable registering the size of this disk item (in bytes).
+     */
+    private int size = 0;
+
+    /**
+     * Variable registering the maximum size of any disk item (in bytes).
+     */
+    private static final int maximumSize = Integer.MAX_VALUE;
+
+
+    /**
+     * Return the size of this disk item (in bytes).
+     */
+    @Raw @Basic
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Set the size of this disk item to the given size.
+     *
+     * @param  size
+     *         The new size for this disk item.
+     * @pre    The given size must be legal.
+     *         | isValidSize(size)
+     * @post   The given size is registered as the size of this disk item.
+     *         | new.getSize() == size
+     */
+    @Raw @Model
+    protected void setSize(int size) {
+        this.size = size;
+    }
+
+    /**
+     * Return the maximum disk item size.
+     */
+    @Basic @Immutable
+    public static int getMaximumSize() {
+        return maximumSize;
+    }
+
+    /**
+     * Check whether the given size is a valid size for a disk item.
+     *
+     * @param  size
+     *         The size to check.
+     * @return True if and only if the given size is positive and does not
+     *         exceed the maximum size.
+     *         | result == ((size >= 0) && (size <= getMaximumSize()))
+     */
+    public static boolean isValidSize(int size) {
+        return ((size >= 0) && (size <= getMaximumSize()));
+    }
+
+    /**
+     * Increases the size of this disk item with the given delta.
+     *
+     * @param   delta
+     *          The amount of bytes by which the size of this disk item
+     *          must be increased.
+     * @pre     The given delta must be strictly positive.
+     *          | delta > 0
+     * @effect  The size of this disk item is increased with the given delta.
+     *          | changeSize(delta)
+     */
+    public void enlarge(int delta) throws DiskItemNotWritableException {
+        changeSize(delta);
+    }
+
+    /**
+     * Decreases the size of this disk item with the given delta.
+     *
+     * @param   delta
+     *          The amount of bytes by which the size of this disk item
+     *          must be decreased.
+     * @pre     The given delta must be strictly positive.
+     *          | delta > 0
+     * @effect  The size of this disk item is decreased with the given delta.
+     *          | changeSize(-delta)
+     */
+    public void shorten(int delta) throws DiskItemNotWritableException {
+        changeSize(-delta);
+    }
+
+    /**
+     * Change the size of this disk item with the given delta.
+     *
+     * @param  delta
+     *         The amount of bytes by which the size of this disk item
+     *         must be increased or decreased.
+     * @pre    The given delta must not be 0
+     *         | delta != 0
+     * @effect The size of this disk item is adapted with the given delta.
+     *         | setSize(getSize()+delta)
+     * @effect The modification time is updated.
+     *         | setModificationTime()
+     * @throws DiskItemNotWritableException(this)
+     *         This disk item is not writable.
+     *         | ! isWritable()
+     */
+    @Model
+    private void changeSize(int delta) throws DiskItemNotWritableException{
+        if (isWritable()) {
+            setSize(getSize()+delta);
+            setModificationTime();
+        }else{
+            throw new DiskItemNotWritableException(this);
+        }
+    }
+
+
+
+
     /**********************************************************
      * parent directory
      **********************************************************/
@@ -111,7 +216,7 @@ public abstract class DiskItem extends PrimitiveDiskItem{
      * The parents directory of this disk item, thus the directory which contains
      * this disk item. Cannot be null.
      */
-    protected Dir parent;
+    protected Directory parent;
 
     /**
      * Make the parent directory of this disk item the given directory.
@@ -119,8 +224,9 @@ public abstract class DiskItem extends PrimitiveDiskItem{
      * @param directory
      *        The given directory to which this disk item will be "moved".
      */
-    protected void setParent(Dir directory){
+    protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
+            // als writable?
             parent.remove(this);
             directory.add(this);
             setParent(directory);
@@ -131,7 +237,7 @@ public abstract class DiskItem extends PrimitiveDiskItem{
     /**
      * Return the parent directory of this directory.
      */
-    public Dir getParent() {
+    public Directory getParent() {
         return this.parent;
     }
 
@@ -144,7 +250,7 @@ public abstract class DiskItem extends PrimitiveDiskItem{
      * @return  Return false if this disk item does not have a parent directory,
      *          return true otherwise.
      */
-    protected boolean isValidParentDir(Dir dir) {
+    protected boolean isValidParentDir(Directory dir) {
         if (dir != null) {
             return true;
         }

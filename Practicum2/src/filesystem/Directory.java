@@ -24,55 +24,38 @@ import java.util.Collections;
  * @author  Lander Werbrouck
  * @version 2.0
  */
-public class Dir extends DiskItem {
+public class Directory extends DiskItem {
 
     /**********************************************************
      * Constructors
      **********************************************************/
 
-    public Dir(Dir parent, String name, boolean writable){
+    public Directory(Directory parent, String name, boolean writable){
         super(name);
         setWritable(writable);
     }
 
-    public Dir(Dir parent, String name){
+    public Directory(Directory parent, String name){
         super(name);
         setWritable(true);
     }
 
-    public Dir(String name, boolean writable){
+    public Directory(String name, boolean writable){
         super(name);
         setWritable(writable);
     }
 
-    public Dir(String name){
+    public Directory(String name){
         super(name);
         setWritable(true);
     }
 
-
-    /**********************************************************
-     * writable
-     **********************************************************/
-
-    /**
-     * Check whether the given name is a legal name for a directory.
-     *
-     * @param  	name
-     *			The name to be checked
-     * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits,
-     * 			hyphens and underscores; false otherwise.
-     * 			| result ==
-     * 			|	(name != null) && name.matches("[a-zA-Z_0-9-]+")
-     * Variable registering whether or not this disk item is writable.
-     */
-    private boolean isWritable = true;
 
 
     /**********************************************************
      * size - nominal programming
      **********************************************************/
+
     /**
      * Return the size of this disk item (in bytes).
      */
@@ -255,7 +238,9 @@ public class Dir extends DiskItem {
     }
 
     public void sortDiskItems() {
+        for (int i = 0 ;  ; i++) {
 
+        }
     }
 
     public void organiseDiskItems() {
@@ -305,14 +290,10 @@ public class Dir extends DiskItem {
          * Check whether this directory is a root directory.
          *
          * @return True if this directory has no parents, false otherwise.
-         *         | result == isValidParentDir(this.getParent())
+         *         | result == (this.getParent() == null)
          */
         public boolean isRoot() {
-            if (isValidParentDir(this.getParent())) {
-                return true;
-            }
-
-            return false;
+            return this.getParent() == null;
         }
 
 

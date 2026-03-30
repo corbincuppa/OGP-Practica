@@ -3,7 +3,6 @@ import java.util.Date;
 
 import filesystem.FileType;
 import filesystem.File;
-import filesystem.FileNotWritableException;
 import org.junit.*;
 
 /**

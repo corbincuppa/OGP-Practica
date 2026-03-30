@@ -69,7 +69,7 @@ public abstract class PrimitiveDiskItem {
      *          |      else new.getName().equals(getDefaultName())
      */
     @Raw @Model
-    private void setName(String name) {
+    void setName(String name) {
         if (isValidName(name)) {
             this.name = name;
         } else {

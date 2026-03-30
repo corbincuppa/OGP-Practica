@@ -22,7 +22,7 @@ public class DirectoryContainsSelfException extends RuntimeException {
     /**
      * Variable referencing the directory to which change was denied.
      */
-    private final Dir directory;
+    private final Directory directory;
 
     /**
      * Check whether the given directory is a valid directory for this Exception.
@@ -30,7 +30,7 @@ public class DirectoryContainsSelfException extends RuntimeException {
      * 			The directory to check
      * @return	result == (directory != null)
      */
-    public static boolean isValidDirectory(Dir directory) {
+    public static boolean isValidDirectory(Directory directory) {
         return directory != null;
     }
 
@@ -46,7 +46,7 @@ public class DirectoryContainsSelfException extends RuntimeException {
      * 			is set to the given directory.
      * 			| new.getDirectory() == directory
      */
-    public DirectoryContainsSelfException(Dir directory) {
+    public DirectoryContainsSelfException(Directory directory) {
         this.directory = directory;
     }
 
@@ -55,7 +55,7 @@ public class DirectoryContainsSelfException extends RuntimeException {
      */
     @Basic
     @Immutable
-    public Dir getDirectory() {
+    public Directory getDirectory() {
         return directory;
     }
 

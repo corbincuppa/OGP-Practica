@@ -18,8 +18,8 @@ public class DirectoryTest {
     File file3;
     File file4;
     File file5;
-    Dir dir;
-    Dir dir2;
+    Directory dir;
+    Directory dir2;
     ArrayList<DiskItem> listOfItems;
 
     @Before
@@ -29,7 +29,7 @@ public class DirectoryTest {
         file3 = new File("racehorse", FileType.JAVA);
         file4 = new File("apple", FileType.TXT);
         file5 = new File("happyappy", FileType.TXT);
-        dir2 = new Dir(null, "wowzers");
+        dir2 = new Directory(null, "wowzers");
         listOfItems = new ArrayList<>();
         listOfItems.add(file1);
         listOfItems.add(file2);
@@ -37,7 +37,7 @@ public class DirectoryTest {
         listOfItems.add(file4);
         listOfItems.add(file5);
         listOfItems.add(dir2);
-        dir = new Dir("yoopie");
+        dir = new Directory("yoopie");
         dir.addItem(file1);
         dir.addItem(file2);
         dir.addItem(file3);
