@@ -272,6 +272,7 @@ public class DiskItem extends PrimitiveDiskItem{
      * @param directory
      *        The given directory to which this disk item will be "moved".
      */
+    @Raw @Model
     protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
             // als writable?

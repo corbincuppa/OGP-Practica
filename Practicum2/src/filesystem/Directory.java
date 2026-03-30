@@ -196,6 +196,37 @@ public class Directory extends DiskItem {
 
     }
 
+    /**
+     * Remove a given item from this directory.
+     *
+     * @param   item
+     *          The given item to be removed from this directory.
+     * @effect  If this directory contains the given item, then it is removed
+     *          from the contents of this directory and the item's parent is set to null.
+     *          | if (diskItems.contains(item))
+     *          | then diskItems.remove(item) && item.setParent(null)
+     * @throws  DirectoryNotWritableException
+     *          This directory is not writable.
+     *          | isWritable()
+     */
+    public void removeItem(DiskItem item) {
+        if (isWritable()) {
+            if (diskItems.contains(item)) {
+                diskItems.remove(item);
+                item.setParent(null);
+            }
+        }
+        else{
+            throw new DirectoryNotWritableException(this);
+        }
+    }
+
+    /**
+     * Add a list of disk items to this directory.
+     *
+     * @param list
+     *        The list of disk items to be added to this directory.
+     */
     public void addList(ArrayList<DiskItem> list){
         for (DiskItem item: list){
             this.addItem(item);
@@ -203,22 +234,26 @@ public class Directory extends DiskItem {
     }
 
     /**
+     * Swap two items in the contents of this directory.
      *
-     * @param indexItem1
+     * @param index
+     *        The index of the first disk item you want to swap.
+     * @param otherIndex
+     *        The index of the other disk item you want to swap with the first item.
      */
-    private void swapItems(int indexItem1) {
-        DiskItem tmp1 = this.getItemAt(indexItem1);
-        DiskItem tmp2 = this.getItemAt(indexItem1+1);
-        diskItems.set(indexItem1, tmp2);
-        diskItems.set(indexItem1+1, tmp1);
+    private void swapItems(int index, int otherIndex) {
+        DiskItem tmp1 = this.getItemAt(index);
+        DiskItem tmp2 = this.getItemAt(otherIndex);
+        diskItems.set(index, tmp2);
+        diskItems.set(otherIndex, tmp1);
     }
 
     /**
      * Sort the disk items in lexicographical order.
      *
-     * @effect FEBHVYILFGWEBYILEQFVY
+     * @throws
      */
-    public void sortDiskItems() {
+    public void sortDiskItems() throws DiskItemsHaveSameNameException {
         for (int pass = 0 ; pass < diskItems.size(); pass++){
             for (int indexItem = 0 ; indexItem < diskItems.size()-1 ; indexItem++) {
                 DiskItem item1 = diskItems.get(indexItem);
@@ -226,11 +261,10 @@ public class Directory extends DiskItem {
                 if (item1 != null && item2 != null) {
                     String name1 = item1.getName();
                     String name2 = item2.getName();
-                    // mogen niet dezelfde string zijn
                     if (name1.compareToIgnoreCase(name2) == 0) {
-                        // throw new DiskItemsHaveSameNameException
+                        throw new DiskItemsHaveSameNameException(item1, item2);
                     } else if (name1.compareToIgnoreCase(name2) > 0) {
-                        swapItems(indexItem);
+                        swapItems(indexItem, indexItem+1);
 
                     }
                 }
@@ -252,20 +286,20 @@ public class Directory extends DiskItem {
      * root
      **********************************************************/
 
-        /**
-         * Variable registering whether this directory is a root directory.
-         */
-        private boolean root = true;
+    /**
+     * Variable registering whether this directory is a root directory.
+     */
+    private boolean root = true;
 
-        /**
-         * Check whether this directory is a root directory.
-         *
-         * @return True if this directory has no parents, false otherwise.
-         *         | result == (this.getParent() == null)
-         */
-        public boolean isRoot() {
-            return this.getParent() == null;
-        }
+    /**
+     * Check whether this directory is a root directory.
+     *
+     * @return True if this directory has no parents, false otherwise.
+     *         | result == (this.getParent() == null)
+     */
+    public boolean isRoot() {
+        return this.getParent() == null;
+    }
 
 
 
