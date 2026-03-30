@@ -273,7 +273,6 @@ public class File extends DiskItem {
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
     }
-    }
 
 
 
@@ -281,10 +280,5 @@ public class File extends DiskItem {
      * parent directory
      **********************************************************/
 
-    private Directory parentDir;
-
-    protected void setParent(Directory dir) {
-        this.parentDir = dir;
-    }
 
 }

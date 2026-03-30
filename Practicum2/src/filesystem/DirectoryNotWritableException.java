@@ -22,7 +22,7 @@ public class DirectoryNotWritableException extends RuntimeException {
     /**
      * Variable referencing the directory to which change was denied.
      */
-    private final Directory directory;
+    private final Dir directory;
 
     /**
      * Check whether the given directory is a valid directory for this Exception.
@@ -30,7 +30,7 @@ public class DirectoryNotWritableException extends RuntimeException {
      * 			The directory to check
      * @return	result == (directory != null)
      */
-    public static boolean isValidDirectory(Directory directory) {
+    public static boolean isValidDirectory(Dir directory) {
         return directory != null;
     }
 
@@ -46,7 +46,7 @@ public class DirectoryNotWritableException extends RuntimeException {
      * 			is set to the given directory.
      * 			| new.getDirectory() == directory
      */
-    public DirectoryNotWritableException(Directory directory) {
+    public DirectoryNotWritableException(Dir directory) {
         this.directory = directory;
     }
 
@@ -54,7 +54,7 @@ public class DirectoryNotWritableException extends RuntimeException {
      * Return the directory involved in this directory not writable exception.
      */
     @Basic @Immutable
-    public Directory getDirectory() {
+    public Dir getDirectory() {
         return directory;
     }
 

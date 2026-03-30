@@ -3,7 +3,6 @@ package filesystem;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.junit.*;
 
@@ -19,8 +18,8 @@ public class DirectoryTest {
     File file3;
     File file4;
     File file5;
-    Directory dir;
-    Directory dir2;
+    Dir dir;
+    Dir dir2;
     ArrayList<DiskItem> listOfItems;
 
     @Before
@@ -30,7 +29,7 @@ public class DirectoryTest {
         file3 = new File("racehorse", Extension.JAVA);
         file4 = new File("apple", Extension.TXT);
         file5 = new File("happyappy", Extension.TXT);
-        dir2 = new Directory("wowzers", null);
+        dir2 = new Dir(null, "wowzers");
         listOfItems = new ArrayList<>();
         listOfItems.add(file1);
         listOfItems.add(file2);
@@ -38,7 +37,13 @@ public class DirectoryTest {
         listOfItems.add(file4);
         listOfItems.add(file5);
         listOfItems.add(dir2);
-        dir = new Directory("yoopie", listOfItems);
+        dir = new Dir("yoopie");
+        dir.addItem(file1);
+        dir.addItem(file2);
+        dir.addItem(file3);
+        dir.addItem(file4);
+        dir.addItem(file5);
+        dir.addItem(dir2);
     }
 
     @Test

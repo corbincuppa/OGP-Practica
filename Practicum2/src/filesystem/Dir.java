@@ -21,38 +21,31 @@ import java.util.Collections;
  * @author  Lander Werbrouck
  * @version 2.0
  */
-public class Directory extends DiskItem {
+public class Dir extends DiskItem {
 
     /**********************************************************
      * Constructors
      **********************************************************/
 
-    public  Directory(dir, String name, boolean writable){
-        //dir?
+    public Dir(Dir parent, String name, boolean writable){
         super(name);
         setWritable(writable);
     }
 
-    public Directory(dir, String name){
-        //dir?
+    public Dir(Dir parent, String name){
         super(name);
         setWritable(true);
     }
-    //--> this(...)
 
-    public Directory(String name, boolean writable){
-        //dir?
+    public Dir(String name, boolean writable){
         super(name);
         setWritable(writable);
     }
-    //--> this(...)
 
-    public Directory(String name){
-        //dir?
+    public Dir(String name){
         super(name);
         setWritable(true);
     }
-    //--> this(...)
 
 
     /**********************************************************
@@ -268,9 +261,15 @@ public class Directory extends DiskItem {
     }
 
 
+    /**
+     * Return the contents of this directory.
+     */
     public ArrayList<DiskItem> getDiskItems() {
         return diskItems;
-     * Check whether this disk item is writable.
+    }
+
+    /**
+    * Check whether this disk item is writable.
      */
     @Basic
     public boolean isWritable() {
@@ -290,54 +289,32 @@ public class Directory extends DiskItem {
     public void setWritable(boolean isWritable) {
         this.isWritable = isWritable;
     }
-}
-
-
-
-/**********************************************************
- * root
- **********************************************************/
-
-    /**
-     * Variable registering whether this directory is a root directory.
-     */
-    private boolean root = true;
-
-    /**
-     * Check whether this directory is a root directory.
-     *
-     * @return True if this directory has no parents, false otherwise.
-     *         | result == (this.getParent() == null)
-     */
-    public boolean isRoot() {
-        if (this.getParent() == null) {
-            return true;
-        }
-
-        return false;
-    }
 
 
 
     /**********************************************************
-     * parent
+     * root
      **********************************************************/
 
-    /**
-     * Variable registering the parent of this directory. If this
-     * directory is a root directory, this directory has no parents.
-     */
-    private Directory parent;
+        /**
+         * Variable registering whether this directory is a root directory.
+         */
+        private boolean root = true;
 
-    /**
-     * Return the parent directory of this directory.
-     */
-    public Directory getParent() {
-        return this.parent;
-    }
+        /**
+         * Check whether this directory is a root directory.
+         *
+         * @return True if this directory has no parents, false otherwise.
+         *         | result == (this.getParent() == null)
+         */
+        public boolean isRoot() {
+            if (this.getParent() == null) {
+                return true;
+            }
 
-    protected void setParent(Directory dir) {
-        this.parent = dir;
-    }
+            return false;
+        }
+
+
 
 }

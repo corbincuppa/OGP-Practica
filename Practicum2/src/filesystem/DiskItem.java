@@ -3,6 +3,7 @@ package filesystem;
 import be.kuleuven.cs.som.annotate.*;
 import java.util.Date;
 
+
 public abstract class DiskItem {
     /**
      *
@@ -31,7 +32,7 @@ public abstract class DiskItem {
      * 			thus the object is in a raw state upon entry of the constructor.
      */
     @Raw @Model
-    protected DiskItem(Directory dir, String name) {
+    protected DiskItem(Dir dir, String name) {
         setDir(dir);
         setName(name);
     }
@@ -39,13 +40,13 @@ public abstract class DiskItem {
     /**********************************************************
      * dir
      **********************************************************/
-    protected Directory dir;
+    protected Dir dir;
 
-    public Directory getDir() {
+    public Dir getDir() {
         return dir;
     }
 
-    public void setDir(Directory dir) {
+    public void setDir(Dir dir) {
         // als writable?
         this.dir = dir;
     }
@@ -302,5 +303,34 @@ public abstract class DiskItem {
         this.isWritable = isWritable;
     }
 
-    protected abstract void setParent(Directory directory);
+    /**********************************************************
+     * parent directory
+     **********************************************************/
+
+    /**
+     * The parents directory of this disk item, thus the directory which contains
+     * this disk item. Cannot be null.
+     */
+    protected Dir parent;
+
+    /**
+     * GEWUIPFBEWI;BF;IWPBVFPYI4ERVBYEPIBYPIVBYVG
+     *
+     * @param directory
+     */
+    protected void setParent(Dir directory){
+        if (this.parent != null) {
+            parent.remove(this);
+            directory.add(this);
+            this.parent = directory;
+        }
+        this.parent = directory;
+    }
+
+    /**
+     * Return the parent directory of this directory.
+     */
+    public Dir getParent() {
+        return this.parent;
+    }
 }
