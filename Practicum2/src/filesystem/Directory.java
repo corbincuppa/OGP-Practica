@@ -54,6 +54,46 @@ public class Directory extends DiskItem {
 
 
     /**********************************************************
+     * name - total programming
+     **********************************************************/
+
+    /**
+     * Change the name of this disk item to the given name.
+     *
+     * @param	name
+     * 			The new name for this disk item.
+     * @effect  The name of this disk item is set to the given name,
+     * 			if this is a valid name and the disk item is writable,
+     * 			otherwise there is no change.
+     * 			| if (isValidName(name) && isWritable())
+     *          | then setName(name)
+     * @effect  If the name is valid and the disk item is writable, the modification time
+     * 			of this disk item is updated.
+     *          | if (isValidName(name) && isWritable())
+     *          | then setModificationTime()
+     * @effect  If the name is valid and the disk item is writable, the order of the items
+     *          in this directory is resorted.
+     *          | if (isValidName(name) && isWritable())
+     *          | then sortDiskItems()
+     * @throws  DiskItemNotWritableException(this)
+     *          This disk item is not writable
+     *          | ! isWritable()
+     */
+    @Override
+    public void changeName(String name) throws DiskItemNotWritableException {
+        if (isWritable()) {
+            if (isValidName(name)){
+                setName(name);
+                setModificationTime();
+                sortDiskItems();
+            }
+        } else {
+            throw new DiskItemNotWritableException(this);
+        }
+    }
+
+
+    /**********************************************************
      * size - nominal programming
      **********************************************************/
 
@@ -168,10 +208,18 @@ public class Directory extends DiskItem {
      * 		    otherwise there is no change.
      * 			| if (isWritable() && ! isDirectOrIndirectChildOf(this))
      *          | then diskItems.add(item)
+     * @effect  If the directory is writable, and the directory doesn't contain itself,
+     *          then the order of the contents of this directory is resorted lexicographically.
+     *          | if (isWritable() && ! isDirectOrIndirectChildOf(this))
+     *          | then sortDiskItems()
+     * @effect  If this directory is writable, and not a child of itself,
+     *          then the item's parent is set to this directory.
+     *          | if (isWritable() && ! isDirectOrIndirectChildOf(this))
+     *          | then setParent(this)
      * @effect  If the directory is writable and the directory doesn't contain itself,
      *          the modification time of the disk item is updated.
      *          | if (isWritable() && ! isDirectOrIndirectChildOf(this))
-     *          | then item.setModificationTime()
+     *          | then setModificationTime()
      * @throws  DirectoryNotWritableException(this)
      *          This directory is not writable
      *          | ! isWritable()
@@ -181,11 +229,11 @@ public class Directory extends DiskItem {
      */
     public void addItem(DiskItem item) throws DirectoryContainsSelfException, DirectoryNotWritableException {
         if (isWritable()) {
-            // if (item.isDirectOrIndirectChildOf(this))
-            if (item == null) {
+            if (item.isDirectOrIndirectChildOf(this)) {
                 diskItems.add(item);
                 this.sortDiskItems();
                 item.setParent(this);
+                setModificationTime();
             } else {
                 throw new DirectoryContainsSelfException(this);
             }
@@ -201,19 +249,28 @@ public class Directory extends DiskItem {
      *
      * @param   item
      *          The given item to be removed from this directory.
-     * @effect  If this directory contains the given item, then it is removed
-     *          from the contents of this directory and the item's parent is set to null.
-     *          | if (diskItems.contains(item))
-     *          | then diskItems.remove(item) && item.setParent(null)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the item is removed from the contents of this directory.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then diskItems.remove(item)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the item's parent is set to null.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then setParent(null)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the modification time of this disk item is updated.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then setModificationTime()
      * @throws  DirectoryNotWritableException
      *          This directory is not writable.
      *          | isWritable()
      */
-    public void removeItem(DiskItem item) {
+    public void removeItem(DiskItem item) throws DirectoryNotWritableException {
         if (isWritable()) {
             if (diskItems.contains(item)) {
                 diskItems.remove(item);
                 item.setParent(null);
+                setModificationTime();
             }
         }
         else{
@@ -251,7 +308,13 @@ public class Directory extends DiskItem {
     /**
      * Sort the disk items in lexicographical order.
      *
-     * @throws
+     * @effect  If the name of the first item lexicographically comes before the second,
+     *          then the two items are swapped.
+     *          | if (name1.compareToIgnoreCase(name2) > 0)
+     *          | then swapItems(indexItem, indexItem+1)
+     * @throws  DiskItemsHaveSameNameException
+     *          Two items in this directory have the same name.
+     *          | name1.compareToIgnoreCase(name2) == 0
      */
     public void sortDiskItems() throws DiskItemsHaveSameNameException {
         for (int pass = 0 ; pass < diskItems.size(); pass++){
