@@ -404,6 +404,28 @@ public class Directory extends DiskItem {
     }
 
 
+    public void removeLink(Link link) {
+        Directory parent = link.getParent();
+        if (parent.isWritable()) {
+            ArrayList<DiskItem> list = parent.getDiskItems();
+            list.remove(link);
+            parent.setModificationTime();
+        }
+        else {
+            throw new DiskItemNotWritableException(parent);
+        }
+    }
+
+    public void remove(PrimitiveDiskItem diskItem) {
+        if (diskItem instanceof File) {
+            removeFile(diskItem);
+        } else if (diskItem instanceof Directory) {
+            removeDir(diskItem)
+        } else if (diskItem instanceof Link) {
+            removeLink(diskItem);
+        }
+    }
+
 
     public void sortList()
     {

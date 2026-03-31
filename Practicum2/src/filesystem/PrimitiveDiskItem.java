@@ -14,6 +14,8 @@ import java.util.Date;
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each disk item must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
+ * @invar   Each disk item must have a valid parent directory.
+ *          | isValidParentDir()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -233,4 +235,58 @@ public abstract class PrimitiveDiskItem {
                 ! (other.getCreationTime().before(getCreationTime()) &&
                         other.getModificationTime().before(getCreationTime()) );
     }
+
+
+
+    /**********************************************************
+     * parent directory
+     **********************************************************/
+
+    /**
+     * The parents directory of this disk item, thus the directory which contains
+     * this disk item. Cannot be null.
+     */
+    protected Directory dir;
+
+    /**
+     * Make the parent directory of this disk item the given directory.
+     *
+     * @param directory
+     *        The given directory to which this disk item will be "moved".
+     */
+    @Raw @Model
+    protected void setParent(Directory directory){
+        if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
+            // als writable?
+            dir.remove(this);
+            directory.addItem(this);
+            setParent(directory);
+        }
+        this.dir = directory;
+    }
+
+    /**
+     * Return the parent directory of this directory.
+     */
+    public Directory getParent() {
+        return this.dir;
+    }
+
+    /**
+     * Check if the given directory is a valid parent directory,
+     * i.e. not null.
+     *
+     * @param   dir
+     *          The given directory to check.
+     * @return  Return false if this disk item does not have a parent directory,
+     *          return true otherwise.
+     *          | result == (dir != null)
+     */
+    protected boolean isValidParentDir(Directory dir) {
+        if (dir != null) {
+            return true;
+        }
+        return false;
+    }
+
 }
