@@ -60,7 +60,7 @@ public class File extends DiskItem {
      */
     @Raw
     public File(Directory dir, String name, int size, boolean writable, FileType type) {
-        super(parent, name);
+        super(dir, name);
         setSize(size);
         setWritable(writable);
         this.fileType = type;
