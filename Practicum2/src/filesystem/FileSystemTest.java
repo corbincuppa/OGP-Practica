@@ -1,3 +1,4 @@
+package filesystem;
 import static org.junit.Assert.*;
 import java.util.Date;
 
@@ -7,12 +8,14 @@ import filesystem.File;
 import org.junit.*;
 
 /**
- * A JUnit 4 test class for testing the public methods of the File Class
- * @author Tommy Messelis
+ * A JUnit 4 test class for testing the public methods of the filesystem package.
+ * @author  Adelina Vozianu
+ * @author  Boglárka Csorba-Vitus
+ * @author  Lander Werbrouck
  *
  */
-public class FileTest {
-
+public class FileSystemTest {
+    // Initiation of Files.
     File fileStringIntBoolean;
     File fileString;
     Date timeBeforeConstruction, timeAfterConstruction;
@@ -20,8 +23,19 @@ public class FileTest {
     File fileNotWritable;
     Date timeBeforeConstructionNotWritable, timeAfterConstructionNotWritable;
 
+    // Initiation of Directories.
+    Directory root;
+    Directory dirDirStringBoolean;
+    Directory dirDirString;
+    Directory dirStringBoolean;
+    Directory dirString;
+    Directory dirModifiedName;
+
+    // Initiation of Links.
+
     @Before
     public void setUpFixture(){
+        // Files
         timeBeforeConstruction = new Date();
         fileStringIntBoolean = new File(null, "bestand.txt",100, true);
         fileString = new File("bestand", FileType.TXT);
@@ -30,8 +44,22 @@ public class FileTest {
         timeBeforeConstructionNotWritable = new Date();
         fileNotWritable = new File(null, "bestand",100,false, FileType.TXT);
         timeAfterConstructionNotWritable = new Date();
+
+        // Directories
+        root = new Directory("root");
+        root.makeRoot();
+        dirDirStringBoolean = new Directory(root, "directory", true);
+        dirDirString = new Directory(root, "x-ray");
+        dirStringBoolean = new Directory("apple-apple", true);
+        dirString = new Directory("Romeo");
+        dirModifiedName = new Directory("Name_Before");
+
+        // Links
     }
 
+    /**********************************************************
+     * File tests
+     **********************************************************/
     @Test
     public void testFileStringIntBoolean_LegalCase() {
         assertEquals("bestand.txt",fileStringIntBoolean.getName());
@@ -308,6 +336,88 @@ public class FileTest {
         assertSame(fileWithExtension.getFileType().getExtension(), ".java");
     }
 
+
+
+    /**********************************************************
+     * Directory tests
+     **********************************************************/
+    // constructors
+    @Test
+    public void testDirStringBoolean_LegalCase() {
+        assertEquals(root, dirDirStringBoolean.getParent());
+        assertEquals(true, root.hasAsItem(dirDirStringBoolean));
+        assertEquals("directory", dirDirStringBoolean.getName());
+        assertEquals(true, dirDirStringBoolean.isWritable());
+        assertEquals(null, dirDirStringBoolean.getDiskItems());
+    }
+
+    @Test
+    public void testDirStringBoolean_IllegalCase() {
+        assertEquals();
+    }
+
+    @Test
+    public void testDirString_LegalCase() {
+        assertEquals(root, dirDirString.getParent());
+        assertEquals(true, root.hasAsItem(dirDirString));
+        assertEquals("x-ray", dirDirString.getName());
+        assertEquals(true, dirDirString.isWritable());
+        assertEquals(null, dirDirString.getDiskItems());
+    }
+
+    @Test
+    public void testDirString_IllegalCase() {
+
+    }
+
+    @Test
+    public void testStringBoolean_LegalCase() {
+        assertEquals(null, dirStringBoolean.getParent());
+        assertEquals(true, dirStringBoolean.isRoot());
+        assertEquals("apple-apple", dirStringBoolean.getName());
+        assertEquals(true, dirStringBoolean.isWritable());
+        assertEquals(null, dirStringBoolean.getDiskItems());
+    }
+
+    @Test
+    public void testStringBoolean_IllegalCase() {
+
+    }
+
+    @Test
+    public void testString_LegalCase() {
+        assertEquals(null, dirString.getParent());
+        assertEquals(true, dirString.isRoot());
+        assertEquals("Romeo", dirString.getName());
+        assertEquals(true, dirString.isWritable());
+        assertEquals(null, dirString.getDiskItems());
+    }
+
+    @Test
+    public void testString_IllegalCase() {
+
+    }
+
+    @Test
+    public void testDirChangeName_LegalCase() {
+
+    }
+
+    @Test
+    public void testDirChangeName_IllegalCase() {
+
+    }
+
+
+    /**********************************************************
+     * Link tests
+     **********************************************************/
+
+
+
+
+
+
     private void sleep() {
         try {
             Thread.sleep(50);
@@ -315,6 +425,4 @@ public class FileTest {
             e.printStackTrace();
         }
     }
-
 }
-

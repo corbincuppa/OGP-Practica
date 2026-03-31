@@ -5,8 +5,9 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * A class for signaling illegal attempts to change a disk item.
  *
- * @invar	The referenced disk item must be effective
- * 			| isValidFile(getFile())
+ * @invar	The referenced disk item must be effective.
+ * 			| isValidDiskItem(getDiskItem())
+ *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
  * @author  Lander Werbrouck
@@ -46,7 +47,7 @@ public class DiskItemNotWritableException extends RuntimeException {
      * 			is set to the given disk item.
      * 			| new.getDiskItem() == diskItem
      */
-    public DiskItemNotWritableException(DiskItem diskItem) {
+    public DiskItemNotWritableException(PrimitiveDiskItem diskItem) {
         this.diskItem = diskItem;
     }
 
@@ -54,7 +55,7 @@ public class DiskItemNotWritableException extends RuntimeException {
      * Return the disk item involved in this disk item not writable exception.
      */
     @Basic @Immutable
-    public DiskItem getDiskItem() {
+    public PrimitiveDiskItem getDiskItem() {
         return diskItem;
     }
 

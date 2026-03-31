@@ -14,8 +14,10 @@ import be.kuleuven.cs.som.annotate.*;
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each file must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
- * @invar   Each disk item must have a valid parent directory.
+ * @invar   Each file must have a valid parent directory.
  *          | isValidParentDir()
+ * @invar   Each file must have a valid extension.
+ *          | isValidExtension()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -57,8 +59,8 @@ public class File extends DiskItem {
      * 			thus the object is in a raw state upon entry of the constructor.
      */
     @Raw
-    public File(Directory parent, String name, int size, boolean writable, FileType type) {
-        super(parent, name);
+    public File(Directory dir, String name, int size, boolean writable, FileType type) {
+        super(dir, name);
         setSize(size);
         setWritable(writable);
         this.fileType = type;
@@ -94,11 +96,11 @@ public class File extends DiskItem {
         setWritable(true);
         this.fileType = fileType;
     }
-    //--> this(...)
+
 
 
     /**********************************************************
-     * extension
+     * file type
      **********************************************************/
 
     /**
@@ -108,6 +110,10 @@ public class File extends DiskItem {
 
     protected boolean isValidFileType() {
         return fileType != null;
+    }
+
+    public FileType getFileType() {
+        return this.fileType;
     }
 
 
@@ -126,12 +132,9 @@ public class File extends DiskItem {
      * 			| result ==
      * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
      */
-    @Override
     public static boolean isValidName(String name) {
-        return (super.isValidName(name) && name.matches("."));
+        return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
     }
-    // werkt wss niet  (super.isValidName(name) || (name != null && name.matches("[a-zA-Z_0-9.-]+"))
-
 
 
 

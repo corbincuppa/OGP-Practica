@@ -24,8 +24,12 @@ void main() {
     funciton(dir, listOfItems);
 }
 
-private void funciton(Directory dir, ArrayList<DiskItem> listOfItems) {
-    dir.organiseDiskItems();
-    print(Collections.sort(listOfItems));
+private ArrayList<DiskItem> funciton(Directory dir, ArrayList<DiskItem> listOfItems) {
+    dir.sortDiskItems();
     print(dir.getDiskItems());
+    dir.sortList();
+    print(dir.getDiskItems());
+    return listOfItems;
 }
+
+
