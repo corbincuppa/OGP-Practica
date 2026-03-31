@@ -220,14 +220,14 @@ public class Directory extends DiskItem {
      *          the modification time of the disk item is updated.
      *          | if (isWritable() && ! isDirectOrIndirectChildOf(this))
      *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException(this)
+     * @throws  DiskItemNotWritableException(this)
      *          This directory is not writable
      *          | ! isWritable()
      * @throws  DirectoryContainsSelfException(this)
      *          This directory contains itself
      *          | isDirectOrIndirectChildOf()
      */
-    public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DirectoryNotWritableException {
+    public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
         if (isWritable()) {
             if (item.isDirectOrIndirectChildOf(this)) {
                 diskItems.add(item);
@@ -239,7 +239,7 @@ public class Directory extends DiskItem {
             }
         }
         else{
-                throw new DirectoryNotWritableException(this);
+                throw new DiskItemNotWritableException(this);
         }
 
     }
@@ -349,18 +349,18 @@ public class Directory extends DiskItem {
      *          then the modification time of this disk item is updated.
      *          | if (isWritable() && diskItems.contains(item))
      *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException
+     * @throws  DiskItemNotWritableException
      *          This parent directory is not writable.
      *          | file.getParent().isWritable()
      */
-    public void removeFile(File file) throws DirectoryNotWritableException {
+    public void removeFile(File file) throws DiskItemNotWritableException {
         Directory parent = file.getParent();
         if (parent.isWritable()) {
             parent.getDiskItems().remove(file);
             setModificationTime();
         }
         else{
-            throw new DirectoryNotWritableException(parent);
+            throw new DiskItemNotWritableException(parent);
         }
     }
 
@@ -440,7 +440,7 @@ public class Directory extends DiskItem {
      *          then the modification time of this disk item is updated.
      *          | if (isWritable() && diskItems.contains(item))
      *          | then setModificationTime()
-     * @throws  DirectoryNotWritableException
+     * @throws  DiskItemNotWritableException
      *          The parent directory is not writable.
      *          | diskItem.getParent().isWritable()
      */
