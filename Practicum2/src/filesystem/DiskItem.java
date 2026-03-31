@@ -264,7 +264,7 @@ public class DiskItem extends PrimitiveDiskItem{
      * The parents directory of this disk item, thus the directory which contains
      * this disk item. Cannot be null.
      */
-    protected Directory parent;
+    protected Directory dir;
 
     /**
      * Make the parent directory of this disk item the given directory.
@@ -276,18 +276,18 @@ public class DiskItem extends PrimitiveDiskItem{
     protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
             // als writable?
-            parent.remove(this);
-            directory.add(this);
+            dir.remove(this);
+            directory.addItem(this);
             setParent(directory);
         }
-        this.parent = directory;
+        this.dir = directory;
     }
 
     /**
      * Return the parent directory of this directory.
      */
     public Directory getParent() {
-        return this.parent;
+        return this.dir;
     }
 
     /**
@@ -298,6 +298,7 @@ public class DiskItem extends PrimitiveDiskItem{
      *          The given directory to check.
      * @return  Return false if this disk item does not have a parent directory,
      *          return true otherwise.
+     *          | result == (dir != null)
      */
     protected boolean isValidParentDir(Directory dir) {
         if (dir != null) {

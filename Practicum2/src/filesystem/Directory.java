@@ -357,11 +357,11 @@ public class Directory extends DiskItem {
      *          This directory is not writable.
      *          | isWritable()
      */
-    public void removeItem(DiskItem item) throws DirectoryNotWritableException {
+    public void removeFile(File file) throws DirectoryNotWritableException {
         if (isWritable()) {
-            if (diskItems.contains(item)) {
-                diskItems.remove(item);
-                item.setParent(null);
+            if (diskItems.contains(file)) {
+                diskItems.remove(file);
+                file.setParent(null);
                 setModificationTime();
             }
         }
@@ -371,10 +371,36 @@ public class Directory extends DiskItem {
     }
 
     /**
+     * Remove a given directory.
      *
+     * @param   dir
+     *          The given dir to be removed.
+     * @effect  If the given directory is writable and its contents are empty,
+     *          the given directory is removed and the modification time of the
+     *          parent directory is set to the current time.
+     *          | if (isWritable() && getDiskItems() == null)
+     *          | then parent.setModificationTime()
+     * @throws  DiskItemNotWritableException
+     *          The given directory is not writable.
+     *          | isWritable()
+     * @throws  DirectoryNotEmptyException
+     *          The given directory is not empty.
+     *          | getDiskItems() != null
      */
     public void removeDir(Directory dir) {
-
+        if (dir.isWritable()) {
+            if (dir.getDiskItems() == null) {
+                diskItems.remove(dir);
+                Directory parent = dir.getParent();
+                parent.setModificationTime();
+            }
+            else{
+                throw new DirectoryNotEmptyException(dir);
+            }
+        }
+        else {
+            throw new DiskItemNotWritableException(dir);
+        }
     }
 
 

@@ -59,7 +59,7 @@ public class File extends DiskItem {
      * 			thus the object is in a raw state upon entry of the constructor.
      */
     @Raw
-    public File(Directory parent, String name, int size, boolean writable, FileType type) {
+    public File(Directory dir, String name, int size, boolean writable, FileType type) {
         super(parent, name);
         setSize(size);
         setWritable(writable);
