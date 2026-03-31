@@ -104,7 +104,7 @@ public class Directory extends DiskItem {
     public int getSize() {
         int sum = 0;
         for(PrimitiveDiskItem item: diskItems){
-            int size = ((DiskItem)item).getSize();
+            int size = ((File)item).getSize();
             sum += size;
         }
         return sum;
@@ -140,20 +140,28 @@ public class Directory extends DiskItem {
 
     /**
      * Return the disk item with the given name, if the disk item
-     * is inside this directory. // throws exception if not in directory??
+     * is inside this directory.
      *
-     * @param nameItem
-     * @return item
-     * The disk item with the given name which is
-     * inside this directory.
+     * @param   nameItem
+     *          The name of the disk item to be returned.
+     * @throws  DiskItemNotInDirectoryException
+     *          The disk item with the given name is not inside this directory.
+     *          | ! containsDiskItemWithName(nameItem)
+     * @return  item
+     *          The disk item with the given name which is
+     *          inside this directory.
      */
     public Object getItem(String nameItem) {
-        for(PrimitiveDiskItem item: diskItems) {
-            if (item.getName() == nameItem) {
-                return item;
+        if (containsDiskItemWithName(nameItem)) {
+            for (PrimitiveDiskItem item : diskItems) {
+                if (item.getName() == nameItem) {
+                    return item;
+                }
             }
         }
-        return "Found no such item.";
+        else {
+            throw new DiskItemNotInDirectoryException(nameItem);
+        }
     }
 
     /**
@@ -264,6 +272,7 @@ public class Directory extends DiskItem {
      * @param otherIndex
      *        The index of the other disk item you want to swap with the first item.
      */
+    @Model
     private void swapItems(int index, int otherIndex) {
         PrimitiveDiskItem tmp1 = this.getItemAt(index);
         PrimitiveDiskItem tmp2 = this.getItemAt(otherIndex);
@@ -282,7 +291,7 @@ public class Directory extends DiskItem {
      *          Two items in this directory have the same name.
      *          | name1.compareToIgnoreCase(name2) == 0
      */
-    public void sortDiskItems() throws DiskItemsHaveSameNameException {
+    private void sortDiskItems() throws DiskItemsHaveSameNameException {
         for (int pass = 0 ; pass < diskItems.size(); pass++){
             for (int indexItem = 0 ; indexItem < diskItems.size()-1 ; indexItem++) {
                 PrimitiveDiskItem item1 = diskItems.get(indexItem);
