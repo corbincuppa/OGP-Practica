@@ -257,7 +257,6 @@ public abstract class PrimitiveDiskItem {
     @Raw @Model
     protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
-            // als writable?
             dir.remove(this);
             directory.addItem(this);
             setParent(directory);

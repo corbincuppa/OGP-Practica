@@ -32,6 +32,16 @@ public class FileSystemTest {
     Directory dirStringBoolean;
     Directory dirString;
     Directory dirModifiedName;
+    Directory getTotalSize;
+    File      filler1;
+    File      filler2;
+    File      filler3;
+    File      filler4;
+    File      filler5;
+    File      filler6;
+    File      filler7;
+    File      filler8;
+    Directory alsoFiller;
 
     // Initiation of Links.
 
@@ -55,6 +65,17 @@ public class FileSystemTest {
         dirStringBoolean = new Directory("apple-apple", true);
         dirString = new Directory("Romeo");
         dirModifiedName = new Directory("Name_Before");
+        getTotalSize = new Directory("the_one");
+        filler1 = new File(getTotalSize, "a", 100, true);
+        filler2 = new File(getTotalSize, "b", 100, true);
+        filler3 = new File(getTotalSize, "c", 100, true);
+        filler4 = new File(getTotalSize, "d", 100, true);
+        filler5 = new File(getTotalSize, "e", 100, true);
+        filler6 = new File(getTotalSize, "f", 100, true);
+        filler7 = new File(getTotalSize, "g", 100, true);
+        filler8 = new File(getTotalSize, "h", 100, true);
+        alsoFiller = new Directory(getTotalSize, "i");
+
 
         // Links
     }
@@ -405,6 +426,46 @@ public class FileSystemTest {
         ArrayList<PrimitiveDiskItem> listBefore = root.getDiskItems();
         dirDirString.changeName("directory1");
         assertNotEquals(listBefore, root.getDiskItems());
+    }
+
+    @Test
+    public void testGetSizeDir() {
+        assertEquals(800, getTotalSize.getSize());
+    }
+
+    @Test
+    public void testGetNbItems() {
+        assertEquals(9, getTotalSize.getNbItems());
+    }
+
+    @Test
+    public void testGetItemAt() {
+        assertEquals(filler1, getTotalSize.getItemAt(1));
+    }
+
+    @Test
+    public void testGetItem() {
+        assertEquals(filler1, getTotalSize.getItem("a"));
+    }
+
+    @Test
+    public void testContainsDiskItemWithName() {
+        assertTrue(getTotalSize.containsDiskItemWithName("g"));
+    }
+
+    @Test
+    public void testGetIndex() {
+        assertEquals(9, getTotalSize.getIndex(alsoFiller));
+    }
+
+    @Test
+    public void testHasAsItem_LegalCase() {
+        assertTrue(getTotalSize.hasAsItem(filler7));
+    }
+
+    @Test
+    public void testHasAsItem_IllegalCase() {
+        assertFalse(getTotalSize.hasAsItem(root));
     }
 
 
