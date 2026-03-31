@@ -151,7 +151,7 @@ public class Directory extends DiskItem {
      *          The disk item with the given name which is
      *          inside this directory.
      */
-    public Object getItem(String nameItem) {
+    public PrimitiveDiskItem getItem(String nameItem) {
         if (containsDiskItemWithName(nameItem)) {
             for (PrimitiveDiskItem item : diskItems) {
                 if (item.getName() == nameItem) {
@@ -162,6 +162,7 @@ public class Directory extends DiskItem {
         else {
             throw new DiskItemNotInDirectoryException(nameItem);
         }
+        return null;
     }
 
     /**
@@ -237,7 +238,8 @@ public class Directory extends DiskItem {
      */
     public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
         if (isWritable()) {
-            if (item.isDirectOrIndirectChildOf(this)) {
+            //if (item.isDirectOrIndirectChildOf(this)) {
+            if ( item != null ){
                 diskItems.add(item);
                 this.sortDiskItems();
                 item.setParent(this);
@@ -291,7 +293,7 @@ public class Directory extends DiskItem {
      *          Two items in this directory have the same name.
      *          | name1.compareToIgnoreCase(name2) == 0
      */
-    private void sortDiskItems() throws DiskItemsHaveSameNameException {
+    protected void sortDiskItems() throws DiskItemsHaveSameNameException {
         for (int pass = 0 ; pass < diskItems.size(); pass++){
             for (int indexItem = 0 ; indexItem < diskItems.size()-1 ; indexItem++) {
                 PrimitiveDiskItem item1 = diskItems.get(indexItem);

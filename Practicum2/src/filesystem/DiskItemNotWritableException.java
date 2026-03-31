@@ -23,7 +23,7 @@ public class DiskItemNotWritableException extends RuntimeException {
     /**
      * Variable referencing the disk item to which change was denied.
      */
-    private final DiskItem diskItem;
+    private final PrimitiveDiskItem diskItem;
 
     /**
      * Check whether the given disk item is a valid disk item for this Exception.

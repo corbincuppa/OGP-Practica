@@ -1,5 +1,7 @@
 package filesystem;
 import static org.junit.Assert.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 import filesystem.DiskItemNotWritableException;
@@ -47,7 +49,7 @@ public class FileSystemTest {
 
         // Directories
         root = new Directory("root");
-        root.makeRoot();
+        //root.makeRoot();
         dirDirStringBoolean = new Directory(root, "directory", true);
         dirDirString = new Directory(root, "x-ray");
         dirStringBoolean = new Directory("apple-apple", true);
@@ -345,24 +347,24 @@ public class FileSystemTest {
     @Test
     public void testDirStringBoolean_LegalCase() {
         assertEquals(root, dirDirStringBoolean.getParent());
-        assertEquals(true, root.hasAsItem(dirDirStringBoolean));
+        assertTrue(root.hasAsItem(dirDirStringBoolean));
         assertEquals("directory", dirDirStringBoolean.getName());
-        assertEquals(true, dirDirStringBoolean.isWritable());
-        assertEquals(null, dirDirStringBoolean.getDiskItems());
+        assertTrue(dirDirStringBoolean.isWritable());
+        assertNull(dirDirStringBoolean.getDiskItems());
     }
 
     @Test
     public void testDirStringBoolean_IllegalCase() {
-        assertEquals();
+
     }
 
     @Test
     public void testDirString_LegalCase() {
         assertEquals(root, dirDirString.getParent());
-        assertEquals(true, root.hasAsItem(dirDirString));
+        assertTrue(root.hasAsItem(dirDirString));
         assertEquals("x-ray", dirDirString.getName());
-        assertEquals(true, dirDirString.isWritable());
-        assertEquals(null, dirDirString.getDiskItems());
+        assertTrue(dirDirString.isWritable());
+        assertNull(dirDirString.getDiskItems());
     }
 
     @Test
@@ -372,11 +374,11 @@ public class FileSystemTest {
 
     @Test
     public void testStringBoolean_LegalCase() {
-        assertEquals(null, dirStringBoolean.getParent());
-        assertEquals(true, dirStringBoolean.isRoot());
+        assertNull(dirStringBoolean.getParent());
+        assertTrue(dirStringBoolean.isRoot());
         assertEquals("apple-apple", dirStringBoolean.getName());
-        assertEquals(true, dirStringBoolean.isWritable());
-        assertEquals(null, dirStringBoolean.getDiskItems());
+        assertTrue(dirStringBoolean.isWritable());
+        assertNull(dirStringBoolean.getDiskItems());
     }
 
     @Test
@@ -386,11 +388,11 @@ public class FileSystemTest {
 
     @Test
     public void testString_LegalCase() {
-        assertEquals(null, dirString.getParent());
-        assertEquals(true, dirString.isRoot());
+        assertNull(dirString.getParent());
+        assertTrue(dirString.isRoot());
         assertEquals("Romeo", dirString.getName());
-        assertEquals(true, dirString.isWritable());
-        assertEquals(null, dirString.getDiskItems());
+        assertTrue(dirString.isWritable());
+        assertNull(dirString.getDiskItems());
     }
 
     @Test
@@ -399,14 +401,12 @@ public class FileSystemTest {
     }
 
     @Test
-    public void testDirChangeName_LegalCase() {
-
+    public void testChangeNameResort_LegalCase() {
+        ArrayList<PrimitiveDiskItem> listBefore = root.getDiskItems();
+        dirDirString.changeName("directory1");
+        assertNotEquals(listBefore, root.getDiskItems());
     }
 
-    @Test
-    public void testDirChangeName_IllegalCase() {
-
-    }
 
 
     /**********************************************************
