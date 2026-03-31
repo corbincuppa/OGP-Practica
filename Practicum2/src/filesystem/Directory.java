@@ -103,8 +103,8 @@ public class Directory extends DiskItem {
     @Raw @Basic @Override
     public int getSize() {
         int sum = 0;
-        for(DiskItem item: diskItems){
-            int size = item.getSize();
+        for(PrimitiveDiskItem item: diskItems){
+            int size = ((DiskItem)item).getSize();
             sum += size;
         }
         return sum;
@@ -119,7 +119,7 @@ public class Directory extends DiskItem {
     /**
      * Variable referring to the list of disk items inside a directory.
      */
-    private ArrayList<DiskItem> diskItems;
+    private ArrayList<PrimitiveDiskItem> diskItems;
 
     /**
      * Return the number of disk items inside a directory.
@@ -134,7 +134,7 @@ public class Directory extends DiskItem {
      * @param position
      *        The given position starting from 0.
      */
-    public DiskItem getItemAt(int position) {
+    public PrimitiveDiskItem getItemAt(int position) {
         return this.diskItems.get(position);
     }
 
@@ -148,7 +148,7 @@ public class Directory extends DiskItem {
      * inside this directory.
      */
     public Object getItem(String nameItem) {
-        for(DiskItem item: diskItems) {
+        for(PrimitiveDiskItem item: diskItems) {
             if (item.getName() == nameItem) {
                 return item;
             }
@@ -227,7 +227,7 @@ public class Directory extends DiskItem {
      *          This directory contains itself
      *          | isDirectOrIndirectChildOf()
      */
-    public void addItem(DiskItem item) throws DirectoryContainsSelfException, DirectoryNotWritableException {
+    public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DirectoryNotWritableException {
         if (isWritable()) {
             if (item.isDirectOrIndirectChildOf(this)) {
                 diskItems.add(item);
@@ -265,8 +265,8 @@ public class Directory extends DiskItem {
      *        The index of the other disk item you want to swap with the first item.
      */
     private void swapItems(int index, int otherIndex) {
-        DiskItem tmp1 = this.getItemAt(index);
-        DiskItem tmp2 = this.getItemAt(otherIndex);
+        PrimitiveDiskItem tmp1 = this.getItemAt(index);
+        PrimitiveDiskItem tmp2 = this.getItemAt(otherIndex);
         diskItems.set(index, tmp2);
         diskItems.set(otherIndex, tmp1);
     }
@@ -285,8 +285,8 @@ public class Directory extends DiskItem {
     public void sortDiskItems() throws DiskItemsHaveSameNameException {
         for (int pass = 0 ; pass < diskItems.size(); pass++){
             for (int indexItem = 0 ; indexItem < diskItems.size()-1 ; indexItem++) {
-                DiskItem item1 = diskItems.get(indexItem);
-                DiskItem item2 = diskItems.get(indexItem + 1);
+                PrimitiveDiskItem item1 = diskItems.get(indexItem);
+                PrimitiveDiskItem item2 = diskItems.get(indexItem + 1);
                 if (item1 != null && item2 != null) {
                     String name1 = item1.getName();
                     String name2 = item2.getName();
@@ -305,7 +305,7 @@ public class Directory extends DiskItem {
     /**
      * Return the contents of this directory.
      */
-    public ArrayList<DiskItem> getDiskItems() {
+    public ArrayList<PrimitiveDiskItem> getDiskItems() {
         return diskItems;
     }
 
@@ -337,36 +337,30 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Remove a given item from this directory.
+     * Remove a given file.                                     MOET FILE OOK WRITABLE ZIJN ?!??!?!??!??!??!?!?
      *
-     * @param   item
-     *          The given item to be removed from this directory.
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the item is removed from the contents of this directory.
-     *          | if (isWritable() && diskItems.contains(item))
+     * @param   file
+     *          The given file to be removed from its parent directory.
+     * @effect  If the parent directory is writable, then the item is removed
+     *          from the contents of the directory.
+     *          | if (file.getParent().isWritable() )
      *          | then diskItems.remove(item)
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the item's parent is set to null.
-     *          | if (isWritable() && diskItems.contains(item))
-     *          | then setParent(null)
      * @effect  If this directory is writable, and it contains the given item,
      *          then the modification time of this disk item is updated.
      *          | if (isWritable() && diskItems.contains(item))
      *          | then setModificationTime()
      * @throws  DirectoryNotWritableException
-     *          This directory is not writable.
-     *          | isWritable()
+     *          This parent directory is not writable.
+     *          | file.getParent().isWritable()
      */
     public void removeFile(File file) throws DirectoryNotWritableException {
-        if (isWritable()) {
-            if (diskItems.contains(file)) {
-                diskItems.remove(file);
-                file.setParent(null);
-                setModificationTime();
-            }
+        Directory parent = file.getParent();
+        if (parent.isWritable()) {
+            parent.getDiskItems().remove(file);
+            setModificationTime();
         }
         else{
-            throw new DirectoryNotWritableException(this);
+            throw new DirectoryNotWritableException(parent);
         }
     }
 
@@ -374,7 +368,7 @@ public class Directory extends DiskItem {
      * Remove a given directory.
      *
      * @param   dir
-     *          The given dir to be removed.
+     *          The given directory to be removed.
      * @effect  If the given directory is writable and its contents are empty,
      *          the given directory is removed and the modification time of the
      *          parent directory is set to the current time.
@@ -403,11 +397,24 @@ public class Directory extends DiskItem {
         }
     }
 
-
+    /**
+     * Remove a given link
+     *
+     * @param link
+     *        The link to be removed.
+     * @effect  If the parent directory of the given link is writable, then
+     *          the given link is removed and the modification time of the
+     *          parent directory is set to the current time.
+     *          | if (link.getParent().isWritable())
+     *          | then link.getParent().setModificationTime()
+     * @throws  DiskItemNotWritableException
+     *          The parent directory of the given link is not writable.
+     *          | link.getParent().isWritable()
+     */
     public void removeLink(Link link) {
         Directory parent = link.getParent();
         if (parent.isWritable()) {
-            ArrayList<DiskItem> list = parent.getDiskItems();
+            ArrayList<PrimitiveDiskItem> list = parent.getDiskItems();
             list.remove(link);
             parent.setModificationTime();
         }
@@ -416,15 +423,42 @@ public class Directory extends DiskItem {
         }
     }
 
+    /**
+     * Remove a given disk item.
+     *
+     * @param   diskItem
+     *          The given item to be removed from its parent directory.
+     * @effect  If the parent directory of the given disk item is writable,
+     *          then the item is removed from the contents of the directory.
+     *          | if (diskItem.getParent().isWritable() )
+     *          | then diskItems.remove(item)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the item's parent is set to null.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then setParent(null)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the modification time of this disk item is updated.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then setModificationTime()
+     * @throws  DirectoryNotWritableException
+     *          The parent directory is not writable.
+     *          | diskItem.getParent().isWritable()
+     */
     public void remove(PrimitiveDiskItem diskItem) {
         if (diskItem instanceof File) {
-            removeFile(diskItem);
+            removeFile((File) diskItem);
         } else if (diskItem instanceof Directory) {
-            removeDir(diskItem)
+            removeDir((Directory) diskItem);
         } else if (diskItem instanceof Link) {
-            removeLink(diskItem);
+            removeLink((Link) diskItem);
         }
     }
+
+
+
+
+
+
 
 
     public void sortList()

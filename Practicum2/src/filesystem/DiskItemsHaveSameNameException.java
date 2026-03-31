@@ -25,12 +25,12 @@ public class DiskItemsHaveSameNameException extends RuntimeException {
     /**
      * Variable referencing the disk item to which has the same name.
      */
-    private final DiskItem diskItem;
+    private final PrimitiveDiskItem diskItem;
 
     /**
      * Variable referencing the other disk item to which has the same name.
      */
-    private final DiskItem otherDiskItem;
+    private final PrimitiveDiskItem otherDiskItem;
 
     /**
      * Check whether the given disk item is a valid disk item for this Exception.
@@ -38,7 +38,7 @@ public class DiskItemsHaveSameNameException extends RuntimeException {
      * 			The disk item to check
      * @return	result == (diskItem != null)
      */
-    public static boolean isValidDiskItem(DiskItem diskItem) {
+    public static boolean isValidDiskItem(PrimitiveDiskItem diskItem) {
         return diskItem != null;
     }
 
@@ -56,7 +56,7 @@ public class DiskItemsHaveSameNameException extends RuntimeException {
      * 			is set to the given disk item.
      * 			| new.getDiskItem() == diskItem
      */
-    public DiskItemsHaveSameNameException(DiskItem diskItem, DiskItem otherDiskItem) {
+    public DiskItemsHaveSameNameException(PrimitiveDiskItem diskItem, PrimitiveDiskItem otherDiskItem) {
         this.diskItem = diskItem;
         this.otherDiskItem = otherDiskItem;
     }

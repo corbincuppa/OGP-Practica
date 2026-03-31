@@ -47,7 +47,7 @@ public class DiskItemNotWritableException extends RuntimeException {
      * 			is set to the given disk item.
      * 			| new.getDiskItem() == diskItem
      */
-    public DiskItemNotWritableException(DiskItem diskItem) {
+    public DiskItemNotWritableException(PrimitiveDiskItem diskItem) {
         this.diskItem = diskItem;
     }
 
@@ -55,7 +55,7 @@ public class DiskItemNotWritableException extends RuntimeException {
      * Return the disk item involved in this disk item not writable exception.
      */
     @Basic @Immutable
-    public DiskItem getDiskItem() {
+    public PrimitiveDiskItem getDiskItem() {
         return diskItem;
     }
 
