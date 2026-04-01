@@ -372,7 +372,7 @@ public class FileSystemTest {
         assertTrue(root.hasAsItem(dirDirStringBoolean));
         assertEquals("directory", dirDirStringBoolean.getName());
         assertTrue(dirDirStringBoolean.isWritable());
-        assertNull(dirDirStringBoolean.getDiskItems());
+        assertEquals(new ArrayList<PrimitiveDiskItem>(), dirDirStringBoolean.getDiskItems());
     }
 
     @Test
@@ -386,7 +386,7 @@ public class FileSystemTest {
         assertTrue(root.hasAsItem(dirDirString));
         assertEquals("x-ray", dirDirString.getName());
         assertTrue(dirDirString.isWritable());
-        assertNull(dirDirString.getDiskItems());
+        assertEquals(new ArrayList<PrimitiveDiskItem>(), dirDirString.getDiskItems());
     }
 
     @Test
@@ -400,7 +400,7 @@ public class FileSystemTest {
         assertTrue(dirStringBoolean.isRoot());
         assertEquals("apple-apple", dirStringBoolean.getName());
         assertTrue(dirStringBoolean.isWritable());
-        assertNull(dirStringBoolean.getDiskItems());
+        assertEquals(new ArrayList<PrimitiveDiskItem>(), dirStringBoolean.getDiskItems());
     }
 
     @Test
@@ -414,7 +414,7 @@ public class FileSystemTest {
         assertTrue(dirString.isRoot());
         assertEquals("Romeo", dirString.getName());
         assertTrue(dirString.isWritable());
-        assertNull(dirString.getDiskItems());
+        assertEquals(new ArrayList<PrimitiveDiskItem>(), dirString.getDiskItems());
     }
 
     @Test
@@ -425,14 +425,15 @@ public class FileSystemTest {
     @Test
     public void testChangeNameResort_LegalCase() {
         ArrayList<PrimitiveDiskItem> listBefore = root.getDiskItems();
+        root.getDiskItems().add(dirDirString);
+        root.getDiskItems().add(dirDirStringBoolean);
         dirDirString.changeName("abomination");
-        assertNotEquals(listBefore, root.getDiskItems());
+        assertNotEquals(Arrays.asList(dirDirStringBoolean, dirDirString), root.getDiskItems());
     }
 
     @Test
     public void testGetSizeDir() {
-        ArrayList<PrimitiveDiskItem> listBefore = new ArrayList<>(Arrays.asList(filler1, filler2, filler3, filler4, filler5, alsoFiller));
-        assertSame(listBefore, getTotalSize.getDiskItems());
+        assertEquals(Arrays.asList(filler1, filler2, filler3, filler4, filler5, filler6, filler7, filler8, alsoFiller), getTotalSize.getDiskItems());
         assertEquals(800, getTotalSize.getSize());
     }
 

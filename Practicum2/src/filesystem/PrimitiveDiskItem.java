@@ -263,26 +263,29 @@ public abstract class PrimitiveDiskItem {
      *          this directory is a valid parent, then this disk item is removed from
      *          its parent's contents.
      *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
-     *          | then dir.remove(this)
+     *          | then dir.getDiskItems().remove(this)
      * @effect  If the given directory is a valid parents directory and the parent of
      *          this disk item is a valid parent, then this disk item is added to the
      *          contents of the given directory.
      *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
-     *          | then directory.addItem(this)
+     *          | then directory.getDiskItems().add(this)
      * @effect  If the given directory is a valid parents directory and the parent of
      *          this disk item is a valid parent, then the new parent of this disk item
      *          is set to the given directory.
      *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
-     *          | then setParent(directory)
+     *          | then this.parent = directory
      * @param directory
      *        The given directory which is to be set as the parent of this disk item.
      */
     @Raw @Model
     protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
-            parent.remove(this);
-            directory.addItem(this);
-            setParent(directory);
+            parent.getDiskItems().remove(this);
+            directory.getDiskItems().add(this);
+            this.parent = directory;
+        } else if (isValidParentDir(directory) && !isValidParentDir(this.getParent())) {
+            directory.getDiskItems().add(this);
+            this.parent = directory;
         }
     }
 
@@ -304,10 +307,7 @@ public abstract class PrimitiveDiskItem {
      *          | result == (dir != null)
      */
     protected boolean isValidParentDir(Directory dir) {
-        if (dir != null) {
-            return true;
-        }
-        return false;
+        return dir != null;
     }
 
     public boolean isDirectOrIndirectChildOf(Directory directory){

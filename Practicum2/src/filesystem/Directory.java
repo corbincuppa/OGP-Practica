@@ -108,8 +108,10 @@ public class Directory extends DiskItem {
     public int getSize() {
         int sum = 0;
         for(PrimitiveDiskItem item: diskItems){
-            int size = ((File)item).getSize();
-            sum += size;
+            if (item instanceof File) {
+                int size = ((File) item).getSize();
+                sum += size;
+            }
         }
         return sum;
     }
@@ -136,10 +138,10 @@ public class Directory extends DiskItem {
      * Return disk item situated at the given position in the directory.
      *
      * @param position
-     *        The given position starting from 0.
+     *        The given position starting from 1.
      */
     public PrimitiveDiskItem getItemAt(int position) {
-        return this.diskItems.get(position);
+        return this.diskItems.get(position-1);
     }
 
     /**
@@ -156,15 +158,10 @@ public class Directory extends DiskItem {
      *          inside this directory.
      */
     public PrimitiveDiskItem getItem(String nameItem) {
-        if (containsDiskItemWithName(nameItem)) {
-            for (PrimitiveDiskItem item : diskItems) {
-                if (item.getName() == nameItem) {
-                    return item;
-                }
+        for (PrimitiveDiskItem item : diskItems) {
+            if (item.getName() == nameItem) {
+                return item;
             }
-        }
-        else {
-            throw new DiskItemNotInDirectoryException(nameItem);
         }
         return null;
     }
@@ -184,12 +181,13 @@ public class Directory extends DiskItem {
 
     /**
      * Return the index in the directory of the given disk item.
+     * Index starting from 1.
      * 
      * @param item
      *        The given disk item.
      */
     public int getIndex(DiskItem item) {
-        return diskItems.indexOf(item);
+        return diskItems.indexOf(item) + 1;
     }
 
     /**
@@ -210,11 +208,7 @@ public class Directory extends DiskItem {
      *
      * @param	item
      * 			The item to be added to this directory.
-     * @effect  The given disk item is added to the contents of this directory
-     * 		    if this directory is writable and is not an indirect child of itself,
-     * 		    otherwise there is no change.
-     * 			| if (isWritable() && ! isDirectOrIndirectChildOf(this))
-     *          | then diskItems.add(item)
+     *
      * @effect  If the directory is writable, and the directory doesn't contain itself,
      *          then the order of the contents of this directory is resorted lexicographically.
      *          | if (isWritable() && ! isDirectOrIndirectChildOf(this))
@@ -236,10 +230,9 @@ public class Directory extends DiskItem {
      */
     public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
         if (isWritable()) {
-            if (item.isDirectOrIndirectChildOf(this)) {
-                diskItems.add(item);
-                this.sortDiskItems();
+            if (!item.isDirectOrIndirectChildOf(this)) {
                 item.setParent(this);
+                this.sortDiskItems();
                 setModificationTime();
             } else {
                 throw new DirectoryContainsSelfException(this);
@@ -273,8 +266,8 @@ public class Directory extends DiskItem {
      */
     @Model
     private void swapItems(int index, int otherIndex) {
-        PrimitiveDiskItem tmp1 = this.getItemAt(index);
-        PrimitiveDiskItem tmp2 = this.getItemAt(otherIndex);
+        PrimitiveDiskItem tmp1 = this.getItemAt(index+1);
+        PrimitiveDiskItem tmp2 = this.getItemAt(otherIndex+1);
         diskItems.set(index, tmp2);
         diskItems.set(otherIndex, tmp1);
     }
