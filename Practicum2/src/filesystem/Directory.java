@@ -34,21 +34,25 @@ public class Directory extends DiskItem {
     public Directory(Directory parent, String name, boolean writable){
         super(parent, name);
         setWritable(writable);
+        root = false;
     }
 
     public Directory(Directory parent, String name){
         super(parent, name);
         setWritable(true);
+        root = false;
     }
 
     public Directory(String name, boolean writable){
         super(name);
         setWritable(writable);
+        root = true;
     }
 
     public Directory(String name){
         super(name);
         setWritable(true);
+        root = true;
     }
 
 
@@ -119,7 +123,7 @@ public class Directory extends DiskItem {
     /**
      * Variable referring to the list of disk items inside a directory.
      */
-    private ArrayList<PrimitiveDiskItem> diskItems;
+    private ArrayList<PrimitiveDiskItem> diskItems = new ArrayList<>();
 
     /**
      * Return the number of disk items inside a directory.
@@ -238,7 +242,8 @@ public class Directory extends DiskItem {
      */
     public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
         if (isWritable()) {
-            if (item.isDirectOrIndirectChildOf(this)) {
+            //if (item.isDirectOrIndirectChildOf(this)) {
+            if ( item != null ) {
                 diskItems.add(item);
                 this.sortDiskItems();
                 item.setParent(this);
@@ -462,19 +467,6 @@ public class Directory extends DiskItem {
         } else if (diskItem instanceof Link) {
             removeLink((Link) diskItem);
         }
-    }
-
-
-
-
-
-
-
-
-    public void sortList()
-    {
-        // Sorting the list using lambda function
-        this.diskItems.sort((a, b) -> a.getName().compareTo(b.getName()));
     }
 
 }
