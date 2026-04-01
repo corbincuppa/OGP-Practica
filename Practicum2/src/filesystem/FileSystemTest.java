@@ -49,7 +49,7 @@ public class FileSystemTest {
     public void setUpFixture(){
         // Files
         timeBeforeConstruction = new Date();
-        fileStringIntBoolean = new File(null, "bestand.txt",100, true);
+        fileStringIntBoolean = new File(null, "bestand",100, true);
         fileString = new File("bestand", FileType.TXT);
         timeAfterConstruction = new Date();
 
@@ -85,7 +85,7 @@ public class FileSystemTest {
      **********************************************************/
     @Test
     public void testFileStringIntBoolean_LegalCase() {
-        assertEquals("bestand.txt",fileStringIntBoolean.getName());
+        assertEquals("bestand",fileStringIntBoolean.getName());
         assertEquals(fileStringIntBoolean.getSize(),100);
         assertTrue(fileStringIntBoolean.isWritable());
         assertNull(fileStringIntBoolean.getModificationTime());
@@ -108,7 +108,7 @@ public class FileSystemTest {
 
     @Test
     public void testFileString_LegalCase() {
-        assertEquals("bestand.txt",fileString.getName());
+        assertEquals("bestand",fileString.getName());
         assertEquals(0,fileString.getSize());
         assertTrue(fileString.isWritable());
         assertNull(fileString.getModificationTime());
@@ -162,7 +162,7 @@ public class FileSystemTest {
     @Test
     public void testChangeName_IllegalName() {
         fileString.changeName("$IllegalName$");
-        assertEquals("bestand.txt",fileString.getName());
+        assertEquals("bestand",fileString.getName());
         assertNull(fileString.getModificationTime());
     }
 
