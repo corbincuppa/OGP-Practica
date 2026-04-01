@@ -9,7 +9,6 @@ import java.util.Date;
  *
  * @invar	Each disk item must have a properly spelled name.
  * 			| isValidName(getName())
- * 			| isValidSize(getSize())
  * @invar   Each disk item must have a valid creation time.
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each disk item must have a valid modification time.
@@ -23,6 +22,15 @@ import java.util.Date;
  * @version 2.0
  */
 public abstract class PrimitiveDiskItem {
+    /**********************************************************
+     * constructors
+     **********************************************************/
+
+    public PrimitiveDiskItem(Directory parent, String name) {
+        setParent(parent);
+        setName(name);
+    }
+
     /**********************************************************
      * name - total programming
      **********************************************************/

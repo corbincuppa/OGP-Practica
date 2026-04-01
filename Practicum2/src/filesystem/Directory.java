@@ -179,10 +179,7 @@ public class Directory extends DiskItem {
      *         and returns false otherwise.
      */
     public boolean containsDiskItemWithName(String name) {
-        if (diskItems.contains(this.getItem(name))) {
-            return true;
-        }
-        return false;
+        return (diskItems.contains(this.getItem(name)));
     }
 
     /**
@@ -205,10 +202,7 @@ public class Directory extends DiskItem {
      *          | result == diskItems.contains(item)
      */
     public boolean hasAsItem(DiskItem item) {
-        if (diskItems.contains(item)) {
-            return true;
-        }
-        return false;
+        return (diskItems.contains(item));
     }
 
     /**
@@ -242,8 +236,7 @@ public class Directory extends DiskItem {
      */
     public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
         if (isWritable()) {
-            //if (item.isDirectOrIndirectChildOf(this)) {
-            if ( item != null ) {
+            if (item.isDirectOrIndirectChildOf(this)) {
                 diskItems.add(item);
                 this.sortDiskItems();
                 item.setParent(this);

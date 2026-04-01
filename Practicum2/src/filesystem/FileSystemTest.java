@@ -2,6 +2,7 @@ package filesystem;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import filesystem.DiskItemNotWritableException;
@@ -424,12 +425,14 @@ public class FileSystemTest {
     @Test
     public void testChangeNameResort_LegalCase() {
         ArrayList<PrimitiveDiskItem> listBefore = root.getDiskItems();
-        dirDirString.changeName("directory1");
+        dirDirString.changeName("abomination");
         assertNotEquals(listBefore, root.getDiskItems());
     }
 
     @Test
     public void testGetSizeDir() {
+        ArrayList<PrimitiveDiskItem> listBefore = new ArrayList<>(Arrays.asList(filler1, filler2, filler3, filler4, filler5, alsoFiller));
+        assertSame(listBefore, getTotalSize.getDiskItems());
         assertEquals(800, getTotalSize.getSize());
     }
 

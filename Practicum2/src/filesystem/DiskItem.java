@@ -48,21 +48,18 @@ public class DiskItem extends PrimitiveDiskItem{
      * 			thus the object is in a raw state upon entry of the constructor.
      */
     @Raw @Model
-    protected DiskItem(Directory dir, String name) {
-        setParent(dir);
-        setName(name);
+    protected DiskItem(Directory parent, String name) {
+        super(parent, name);
     }
 
     @Raw @Model
     protected DiskItem(String name) {
-        setParent(null);
-        setName(name);
+        super(null, name);
     }
 
     @Raw @Model
-    protected DiskItem(Directory dir, String name, int size, boolean writable) {
-        setParent(dir);
-        setName(name);
+    protected DiskItem(Directory parent, String name, int size, boolean writable) {
+        super(parent, name);
         setSize(size);
         setWritable(writable);
     }
