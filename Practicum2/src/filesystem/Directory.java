@@ -238,8 +238,7 @@ public class Directory extends DiskItem {
      */
     public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
         if (isWritable()) {
-            //if (item.isDirectOrIndirectChildOf(this)) {
-            if ( item != null ){
+            if (item.isDirectOrIndirectChildOf(this)) {
                 diskItems.add(item);
                 this.sortDiskItems();
                 item.setParent(this);
