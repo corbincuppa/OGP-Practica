@@ -246,7 +246,7 @@ public abstract class PrimitiveDiskItem {
      * The parents directory of this disk item, thus the directory which contains
      * this disk item. Cannot be null.
      */
-    protected Directory dir;
+    protected Directory parent;
 
     /**
      * Make the parent directory of this disk item the given directory.
@@ -267,23 +267,22 @@ public abstract class PrimitiveDiskItem {
      *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
      *          | then setParent(directory)
      * @param directory
-     *        The given directory to which this disk item will be "moved".
+     *        The given directory which is to be set as the parent of this disk item.
      */
     @Raw @Model
     protected void setParent(Directory directory){
         if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
-            dir.remove(this);
+            parent.remove(this);
             directory.addItem(this);
             setParent(directory);
         }
-        this.dir = directory;
     }
 
     /**
      * Return the parent directory of this directory.
      */
     public Directory getParent() {
-        return this.dir;
+        return this.parent;
     }
 
     /**
