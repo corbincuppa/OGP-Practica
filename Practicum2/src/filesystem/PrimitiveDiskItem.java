@@ -310,4 +310,15 @@ public abstract class PrimitiveDiskItem {
         return false;
     }
 
+    public boolean isDirectOrIndirectChildOf(Directory directory){
+        Directory parent = this.getParent();
+        while (parent != null) {
+            if (parent.equals(directory)) {
+                return true;
+            }
+            parent = parent.getParent();
+        }
+        return false;
+    }
+
 }
