@@ -252,18 +252,18 @@ public abstract class PrimitiveDiskItem {
      * Make the parent directory of this disk item the given directory.
      *
      * @effect  If the given directory is a valid parents directory and the parent of
-     *          this directory is a valid parent, then the current parent of this
-     *          directory is removed.
+     *          this directory is a valid parent, then this disk item is removed from
+     *          its parent's contents.
      *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
      *          | then dir.remove(this)
      * @effect  If the given directory is a valid parents directory and the parent of
-     *          this directory is a valid parent, then the directory is added to the
+     *          this disk item is a valid parent, then this disk item is added to the
      *          contents of the given directory.
      *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
      *          | then directory.addItem(this)
      * @effect  If the given directory is a valid parents directory and the parent of
-     *          this directory is a valid parent, then the new parent of this directory
-     *          is set to the given directory
+     *          this disk item is a valid parent, then the new parent of this disk item
+     *          is set to the given directory.
      *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
      *          | then setParent(directory)
      * @param directory
