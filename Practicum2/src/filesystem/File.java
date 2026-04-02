@@ -68,8 +68,7 @@ public class File extends DiskItem {
 
     @Raw
     public File(Directory dir, String name, int size, boolean writable) {
-        super(dir, name, size, writable);
-        fileType = FileType.TXT;
+        this(dir, name, size, writable, FileType.TXT)
     }
 
     @Raw
@@ -137,7 +136,37 @@ public class File extends DiskItem {
     }
 
 
+    /**********************************************************
+     * destructors
+     **********************************************************/
 
+    /**
+     * Remove a given directory.
+     *
+     * @param   file
+     *          The given directory to be removed.
+     * @effect  If the given directory is writable and its contents are empty,
+     *          the given directory is removed and the modification time of the
+     *          parent directory is set to the current time.
+     *          | if (isWritable() && getDiskItems() == null)
+     *          | then parent.setModificationTime()
+     * @throws  DiskItemNotWritableException
+     *          The given directory is not writable.
+     *          | isWritable()
+     * @throws  DirectoryNotEmptyException
+     *          The given directory is not empty.
+     *          | getDiskItems() != null
+     */
+    public void destructorFile(File file) {
+        if (file.isWritable()) {
+            Directory parent = file.getParent();
+            parent.removeItem(file);
+            parent.setModificationTime();
+            }
+        else {
+            throw new DiskItemNotWritableException(file);
+        }
+    }
 
 
 
