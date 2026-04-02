@@ -31,44 +31,45 @@ public class File extends DiskItem {
      **********************************************************/
 
     /**
-     * Initialize a new file with given name, size and writability.
+     * Initialize a new file with given parent, name, size, writability and filetype.
      *
+     * @param   dir
+     *          The directory containing the new file
      * @param  	name
-     *         	The name of the new file.
-     * @param  	size
-     *         	The size of the new file.
+     *        	The name of new file
      * @param  	writable
      *         	The writability of the new file.
-     * @effect  The name of the file is set to the given name.
-     * 			If the given name is not valid, a default name is set.
-     *          | setName(name)
+     * @param  	size
+     *         	The size of the new file.
+     * @param  	type
+     *         	The FileType of the new file.
      * @effect	The size is set to the given size (must be valid)
      * 			| setSize(size)
-     * @effect	The writability is set to the given flag
-     * 			| setWritable(writable)
-     * @post    The new creation time of this file is initialized to some time during
-     *          constructor execution.
-     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
-     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
-     * @post    The new file has no time of last modification.
-     *          | new.getModificationTime() == null
-     *
-     * @note	The constructor is annotated raw because at the start of the execution, not all fields are
-     * 			defaulted to a value that is accepted by the invariants.
-     * 			E.g. the name is defaulted to null, which is not allowed,
-     * 			thus the object is in a raw state upon entry of the constructor.
+     * @post    The filetype is the given filetype
+     *          | new.getFileType() == type
      */
     @Raw
     public File(Directory dir, String name, int size, boolean writable, FileType type) {
-        super(dir, name);
+        super(dir, name, writable);
         setSize(size);
-        setWritable(writable);
         this.fileType = type;
     }
 
+    /**
+     * Initialize a new file with given given parent, name, size, writability and filetype.
+     * @param   dir
+     *          The directory containing the new file
+     * @param  	name
+     *        	The name of new file
+     * @param  	type
+     *         	The FileType of the new file.
+     * @effect  This new file is initialized with the given dir, name, a zero size
+     * 	        true writability and the given filetype
+     *         | this(dir, name, 0, true, type)
+     */
     @Raw
     public File(Directory dir, String name, FileType type)  {
-        this(dir, name, 0, true, FileType.TXT);
+        this(dir, name, 0, true, type);
     }
 
 

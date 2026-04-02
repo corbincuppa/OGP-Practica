@@ -31,8 +31,7 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     public Directory(Directory parent, String name, boolean writable){
-        super(parent, name);
-        setWritable(writable);
+        super(parent, name, writable);
     }
 
     public Directory(Directory parent, String name){
@@ -96,7 +95,7 @@ public class Directory extends DiskItem {
     /**
      * Return the size of this disk item (in bytes).
      */
-    @Raw @Basic @Override
+    @Raw @Basic
     public int getSize() {
         int sum = 0;
         for(PrimitiveDiskItem item: diskItems){

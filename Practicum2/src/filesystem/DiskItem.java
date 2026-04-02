@@ -29,8 +29,12 @@ public class DiskItem extends PrimitiveDiskItem{
      **********************************************************/
 
     /**
-     * Initialize a new disk item with given name, size and writability.
+     * Initialize a new disk item with given parent, name and writability.
      *
+     * @param   parent
+     *          The directory containing the new disk item
+     * @param  	name
+     *        	The name of the disk item
      * @param  	writable
      *         	The writability of the new diskItem.
      * @effect The writability is set to the given flag
