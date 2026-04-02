@@ -3,6 +3,7 @@ package filesystem;
 import be.kuleuven.cs.som.annotate.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 /**
  * A class of disk items.
@@ -387,6 +388,27 @@ public abstract class PrimitiveDiskItem {
         }
     }
 
+    /**
+     * Return the absolute path to this primitive disk item
+     *
+     * @return  the absolute path as a string, e.g., {@code "/rootDir/subDir/file.pdf"}
+     */
+    public String getAbsolutePath(){
+        LinkedList<String> path = new LinkedList<>();
+        path.add(this.getName());
+        Directory parent = this.getParent();
+        while (parent != null) {
+            path.add(parent.getName());
+            parent = parent.getParent();
+        }
+        StringBuilder absolutePath = new StringBuilder();
+        while (!path.isEmpty()){
+            String laatste = path.removeLast();
+            absolutePath.append("/");
+            absolutePath.append(laatste);
+        }
+        return absolutePath.toString();
+    }
     /**********************************************************
      * destructors
      **********************************************************/
