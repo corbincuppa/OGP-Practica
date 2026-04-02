@@ -273,7 +273,7 @@ public abstract class PrimitiveDiskItem {
 
     /**
      * The parents directory of this disk item, thus the directory which contains
-     * this disk item. Cannot be null.
+     * this disk item cannot be null.
      */
     protected Directory parent;
 
@@ -330,6 +330,17 @@ public abstract class PrimitiveDiskItem {
         return dir.getParent() != null;
     }
 
+    /**
+     * Check whether this primitive disk item is a direct or indirect child of the given directory
+     *
+     * @param  	directory
+     *          The directory to check against
+     * @return 	True if this primitive disk item is contained somewhere in the directory tree of the given directory
+     *         	|result == (exists Directory parent;
+     *          |(parent == this.getParent() && parent.equals(directory)) ||
+     *          |(parent == this.getParent().getParent() && parent.equals(directory)) ||
+     *          | ...
+     */
     public boolean isDirectOrIndirectChildOf(Directory directory){
         Directory parent = this.getParent();
         while (parent != null) {
@@ -341,12 +352,20 @@ public abstract class PrimitiveDiskItem {
         return false;
     }
 
+    /**
+     * Get the root directory of the directory tree of the given directory
+     *
+     * @return 	The root directory of this primitive disk item
+     *          | result == (result.getParent == null)
+     */
     public Directory getRoot(){
+        PrimitiveDiskItem child = this;
         Directory parent = this.getParent();
         while (parent != null) {
+            child = parent;
             parent = parent.getParent();
         }
-        return parent;
+        return (Directory) child;
     }
 
     /**********************************************************
