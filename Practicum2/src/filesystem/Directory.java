@@ -338,7 +338,7 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Remove a given file.                                     MOET FILE OOK WRITABLE ZIJN ?!??!?!??!??!??!?!?
+     * Remove a given file.
      *
      * @param   file
      *          The given file to be removed from its parent directory.
