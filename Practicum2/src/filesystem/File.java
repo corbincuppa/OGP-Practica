@@ -90,44 +90,42 @@ public class File extends DiskItem {
         return this.fileType;
     }
 
-
     /**********************************************************
-     * name - total programming
+     * name
      **********************************************************/
 
     /**
-     * Check whether the given name is a legal name for a disk item.
+     * Check whether the given name is a legal name for a file.
      *
      * @param  	name
      *			The name to be checked
      * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits, dots,
+     * 			empty and consisting only of letters, digits,
      * 			hyphens and underscores; false otherwise.
      * 			| result ==
-     * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
+     * 			|	(name != null) && name.matches("[a-zA-Z_0-9-].+")
      */
     public static boolean isValidName(String name) {
-        return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
+        return (name != null && name.matches("[a-zA-Z_0-9-].+"));
     }
-
 
     /**********************************************************
      * size - nominal programming
      **********************************************************/
 
     /**
-     * Variable registering the size of this disk item (in bytes).
+     * Variable registering the size of this file (in bytes).
      */
     private int size = 0;
 
     /**
-     * Variable registering the maximum size of any disk item (in bytes).
+     * Variable registering the maximum size of any file (in bytes).
      */
     private static final int maximumSize = Integer.MAX_VALUE;
 
 
     /**
-     * Return the size of this disk item (in bytes).
+     * Return the size of this file (in bytes).
      */
     @Raw @Basic
     public int getSize() {
@@ -135,13 +133,13 @@ public class File extends DiskItem {
     }
 
     /**
-     * Set the size of this disk item to the given size.
+     * Set the size of this file to the given size.
      *
      * @param  size
-     *         The new size for this disk item.
+     *         The new size for this file.
      * @pre    The given size must be legal.
      *         | isValidSize(size)
-     * @post   The given size is registered as the size of this disk item.
+     * @post   The given size is registered as the size of this file.
      *         | new.getSize() == size
      */
     @Raw @Model
@@ -150,7 +148,7 @@ public class File extends DiskItem {
     }
 
     /**
-     * Return the maximum disk item size.
+     * Return the maximum fil size.
      */
     @Basic @Immutable
     public static int getMaximumSize() {
@@ -158,7 +156,7 @@ public class File extends DiskItem {
     }
 
     /**
-     * Check whether the given size is a valid size for a disk item.
+     * Check whether the given size is a valid size for a file.
      *
      * @param  size
      *         The size to check.
@@ -171,14 +169,14 @@ public class File extends DiskItem {
     }
 
     /**
-     * Increases the size of this disk item with the given delta.
+     * Increases the size of this file with the given delta.
      *
      * @param   delta
-     *          The amount of bytes by which the size of this disk item
+     *          The amount of bytes by which the size of this file
      *          must be increased.
      * @pre     The given delta must be strictly positive.
      *          | delta > 0
-     * @effect  The size of this disk item is increased with the given delta.
+     * @effect  The size of this file is increased with the given delta.
      *          | changeSize(delta)
      */
     public void enlarge(int delta) throws DiskItemNotWritableException {
@@ -186,14 +184,14 @@ public class File extends DiskItem {
     }
 
     /**
-     * Decreases the size of this disk item with the given delta.
+     * Decreases the size of this file with the given delta.
      *
      * @param   delta
-     *          The amount of bytes by which the size of this disk item
+     *          The amount of bytes by which the size of this file
      *          must be decreased.
      * @pre     The given delta must be strictly positive.
      *          | delta > 0
-     * @effect  The size of this disk item is decreased with the given delta.
+     * @effect  The size of this file is decreased with the given delta.
      *          | changeSize(-delta)
      */
     public void shorten(int delta) throws DiskItemNotWritableException {
@@ -201,19 +199,19 @@ public class File extends DiskItem {
     }
 
     /**
-     * Change the size of this disk item with the given delta.
+     * Change the size of this file with the given delta.
      *
      * @param  delta
-     *         The amount of bytes by which the size of this disk item
+     *         The amount of bytes by which the size of this file
      *         must be increased or decreased.
      * @pre    The given delta must not be 0
      *         | delta != 0
-     * @effect The size of this disk item is adapted with the given delta.
+     * @effect The size of this file is adapted with the given delta.
      *         | setSize(getSize()+delta)
      * @effect The modification time is updated.
      *         | setModificationTime()
      * @throws DiskItemNotWritableException(this)
-     *         This disk item is not writable.
+     *         This file is not writable.
      *         | ! isWritable()
      */
     @Model
