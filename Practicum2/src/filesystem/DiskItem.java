@@ -109,28 +109,28 @@ public class DiskItem extends PrimitiveDiskItem{
     /**
      * Variable registering whether this disk item is writable.
      */
-    private boolean isWritable = true;
+    private boolean writable = true;
 
     /**
      * Check whether this disk item is writable.
      */
     @Basic
     public boolean isWritable() {
-        return isWritable;
+        return writable;
     }
 
     /**
      * Set the writability of this disk item to the given writability.
      *
-     * @param isWritable
+     * @param writable
      *        The new writability
      * @post  The given writability is registered as the new writability
      *        for this disk item.
      *        | new.isWritable() == isWritable
      */
     @Raw
-    public void setWritable(boolean isWritable) {
-        this.isWritable = isWritable;
+    public void setWritable(boolean writable) {
+        this.writable = writable;
     }
 
 
