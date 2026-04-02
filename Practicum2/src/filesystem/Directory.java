@@ -34,25 +34,18 @@ public class Directory extends DiskItem {
     public Directory(Directory parent, String name, boolean writable){
         super(parent, name);
         setWritable(writable);
-        root = false;
     }
 
     public Directory(Directory parent, String name){
-        super(parent, name);
-        setWritable(true);
-        root = false;
+        this(parent, name,true);
     }
 
     public Directory(String name, boolean writable){
-        super(name);
-        setWritable(writable);
-        root = true;
+        this(null, name,writable);
     }
 
     public Directory(String name){
-        super(name);
-        setWritable(true);
-        root = true;
+        this(null, name,true);
     }
 
 
@@ -345,11 +338,6 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Variable registering whether this directory is a root directory.
-     */
-    private boolean root = true;
-
-    /**
      * Check whether this directory is a root directory.
      *
      * @return True if this directory has no parents, false otherwise.
@@ -357,6 +345,20 @@ public class Directory extends DiskItem {
      */
     public boolean isRoot() {
         return this.getParent() == null;
+    }
+
+    public void makeRoot(){
+        Directory parent = this.getParent();
+        parent.removeItem(this);
+        this.setParent(null);
+    }
+
+    public Directory getRoot(){
+        Directory parent = this.getParent();
+        while (parent != null) {
+            parent = parent.getParent();
+        }
+        return parent;
     }
 
 

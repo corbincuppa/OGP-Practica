@@ -67,14 +67,8 @@ public class File extends DiskItem {
     }
 
     @Raw
-    public File(Directory dir, String name, int size, boolean writable) {
-        this(dir, name, size, writable, FileType.TXT)
-    }
-
-    @Raw
-    public File(String name) {
-        super(name);
-        fileType = FileType.TXT;
+    public File(Directory dir, String name, FileType type)  {
+        this(dir, name, 0, true, FileType.TXT);
     }
 
 
