@@ -253,7 +253,7 @@ public class Directory extends DiskItem {
      *          This parent directory is not writable.
      *          | file.getParent().isWritable()
      */
-    public void removeItem(DiskItem item) throws DiskItemNotWritableException {
+    public void removeItem(PrimitiveDiskItem item) throws DiskItemNotWritableException {
         Directory parent = item.getParent();
         if (parent.isWritable()) {
             parent.getDiskItems().remove(item);
