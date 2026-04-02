@@ -26,8 +26,32 @@ public abstract class PrimitiveDiskItem {
      * constructors
      **********************************************************/
 
-    public PrimitiveDiskItem(Directory parent, String name) {
-        setParent(parent);
+    /**
+     * Initialize a new primitive disk item with given parent and name.
+     *
+     * @param   dir
+     *        	The directory containing the new primitive disk item
+     * @param  	name
+     *         	The name of the primitive disk item
+     * @effect  The name of the primitive disk item is set to the given name.
+     * 			If the given name is not valid, a default name is set.
+     *          | setName(name)
+     * @effect	The directory is set to the given directory
+     * 			| setParent(dir)
+     * @post    The new creation time of this primitive disk item is initialized to some time during
+     *          constructor execution.
+     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+     * @post    The primitive disk item has no time of last modification.
+     *          | new.getModificationTime() == null
+     * @note	The constructor is annotated raw because at the start of the execution, not all fields are
+     * 			defaulted to a value that is accepted by the invariants.
+     * 			E.g. the name is defaulted to null, which is not allowed,
+     * 			thus the object is in a raw state upon entry of the constructor.
+     */
+    @Raw
+    public PrimitiveDiskItem(Directory dir, String name) {
+        setParent(dir);
         setName(name);
     }
 
