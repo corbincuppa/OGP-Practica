@@ -188,8 +188,8 @@ public abstract class PrimitiveDiskItem {
     protected Date modificationTime = null;
 
     /**
-     * Return the time at which this disk item was last modified, that is
-     * at which the name or size was last changed. If this disk item has
+     * Return the time at which this primitive disk item was last modified, that is
+     * at which the name or size was last changed. If this primitive disk item has
      * not yet been modified after construction, null is returned.
      */
     @Raw @Basic
@@ -198,7 +198,7 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Check whether this disk item can have the given date as modification time.
+     * Check whether this primitive disk item can have the given date as modification time.
      *
      * @param	date
      * 			The date to check.
@@ -217,7 +217,7 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Set the modification time of this disk item to the current time.
+     * Set the modification time of this primitive disk item to the current time.
      *
      * @post   The new modification time is effective.
      *         | new.getModificationTime() != null
@@ -235,16 +235,16 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Return whether this disk item and the given other disk item have an
+     * Return whether this primitive disk item and the given other primitive disk item have an
      * overlapping use period.
      *
      * @param 	other
      *        	The other disk item to compare with.
-     * @return 	False if the other disk item is not effective
+     * @return 	False if the other primitive disk item is not effective
      * 			False if the prime object does not have a modification time
-     * 			False if the other disk item is effective, but does not have a modification time
-     * 			otherwise, true if and only if the open time intervals of this disk item and
-     * 			the other disk item overlap
+     * 			False if the other primitive disk item is effective, but does not have a modification time
+     * 			otherwise, true if and only if the open time intervals of this primitive disk item and
+     * 			the other primitive disk item overlap
      *        	| if (other == null) then result == false else
      *        	| if ((getModificationTime() == null)||
      *        	|       other.getModificationTime() == null)
