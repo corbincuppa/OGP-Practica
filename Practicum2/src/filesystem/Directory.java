@@ -2,7 +2,6 @@ package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * A class of directories.
@@ -18,7 +17,7 @@ import java.util.Collections;
  * @invar   Each directory must have a valid parent directory, unless the
  *          directory is a root directory.
  *          | if !isRoot()
- *          | then isValidParentDir()
+ *          | then hasValidParentDir()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -125,7 +124,7 @@ public class Directory extends DiskItem {
     /**
      * Variable referring to the list of disk items inside a directory.
      */
-    private ArrayList<PrimitiveDiskItem> diskItems = new ArrayList<>();
+    private final ArrayList<PrimitiveDiskItem> diskItems = new ArrayList<>();
 
     /**
      * Return the number of disk items inside a directory.
@@ -159,7 +158,7 @@ public class Directory extends DiskItem {
      */
     public PrimitiveDiskItem getItem(String nameItem) {
         for (PrimitiveDiskItem item : diskItems) {
-            if (item.getName() == nameItem) {
+            if (item.getName().equals(nameItem)) {
                 return item;
             }
         }
@@ -229,8 +228,8 @@ public class Directory extends DiskItem {
      *          | isDirectOrIndirectChildOf()
      */
     public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
-        if (isWritable()) {
-            if (!item.isDirectOrIndirectChildOf(this)) {
+        if (this.isWritable()) {
+            if (!this.isDirectOrIndirectChildOf(this)) {
                 item.setParent(this);
                 this.sortDiskItems();
                 setModificationTime();
@@ -319,7 +318,7 @@ public class Directory extends DiskItem {
     /**
      * Variable registering whether this directory is a root directory.
      */
-    private boolean root = true;
+    private boolean root;
 
     /**
      * Check whether this directory is a root directory.
@@ -329,6 +328,31 @@ public class Directory extends DiskItem {
      */
     public boolean isRoot() {
         return this.getParent() == null;
+    }
+
+
+
+    /**********************************************************
+     * parent
+     **********************************************************/
+
+    /**
+     * Check if the given directory has a valid parent directory,
+     * i.e. not a null parent, unless the given directory is a root directory.
+     *
+     * @param dir
+     *        The given directory of which its parent is to be checked.
+     * @return True is the given directory is not a root directory and its parent
+     *         is not equal to a null pointer, false if the parent is a null pointer.
+     *         | if !dir.isRoot()
+     *         | then result == dir.getParent() != null.
+     */
+    @Override
+    protected boolean hasValidParentDir(Directory dir) {
+        if (!dir.isRoot()) {
+            return dir.getParent() != null;
+        }
+        return true;
     }
 
 
