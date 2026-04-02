@@ -15,7 +15,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar   Each file must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
  * @invar   Each file must have a valid parent directory.
- *          | isValidParentDir()
+ *          | hasValidParentDir()
  * @invar   Each file must have a valid extension.
  *          | isValidExtension()
  *

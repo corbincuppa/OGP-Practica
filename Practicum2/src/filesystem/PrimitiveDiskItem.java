@@ -14,7 +14,7 @@ import java.util.Date;
  * @invar   Each disk item must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
  * @invar   Each disk item must have a valid parent directory.
- *          | isValidParentDir()
+ *          | hasValidParentDir()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -297,17 +297,15 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Check if the given directory is a valid parent directory,
-     * i.e. not null.
+     * Check if the given directory has a valid parent directory,
+     * i.e. not a null parent.
      *
-     * @param   dir
-     *          The given directory to check.
-     * @return  Return false if this disk item does not have a parent directory,
-     *          return true otherwise.
-     *          | result == (dir != null)
+     * @param dir
+     *        The given directory of which its parent is to be checked.
+     * @return
      */
-    protected boolean isValidParentDir(Directory dir) {
-        return dir != null;
+    protected boolean hasValidParentDir(Directory dir) {
+        return dir.getParent() != null;
     }
 
     public boolean isDirectOrIndirectChildOf(Directory directory){

@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import filesystem.DiskItemNotWritableException;
-import filesystem.FileType;
-import filesystem.File;
 import org.junit.*;
 
 /**

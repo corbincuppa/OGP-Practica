@@ -2,7 +2,6 @@ package filesystem;
 
 import be.kuleuven.cs.som.annotate.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * A class of directories.
@@ -18,7 +17,7 @@ import java.util.Collections;
  * @invar   Each directory must have a valid parent directory, unless the
  *          directory is a root directory.
  *          | if !isRoot()
- *          | then isValidParentDir()
+ *          | then hasValidParentDir()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -334,11 +333,35 @@ public class Directory extends DiskItem {
 
 
     /**********************************************************
+     * parent
+     **********************************************************/
+
+    /**
+     * Check if the given directory has a valid parent directory,
+     * i.e. not a null parent, unless the given directory is a root directory.
+     *
+     * @param dir
+     *        The given directory of which its parent is to be checked.
+     * @return True is the given directory is not a root directory and its parent
+     *         is not equal to a null pointer, false if the parent is a null pointer.
+     *         | if !dir.isRoot()
+     *         | then result == dir.getParent() != null.
+     */
+    protected boolean hasValidParentDir(Directory dir) {
+        if (!dir.isRoot()) {
+            return dir.getParent() != null;
+        }
+        return true;
+    }
+
+
+
+    /**********************************************************
      * destructors
      **********************************************************/
 
     /**
-     * Remove a given file.                                     MOET FILE OOK WRITABLE ZIJN ?!??!?!??!??!??!?!?
+     * Remove a given file.
      *
      * @param   file
      *          The given file to be removed from its parent directory.
