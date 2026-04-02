@@ -60,23 +60,20 @@ public abstract class PrimitiveDiskItem {
      **********************************************************/
 
     /**
-     * Variable referencing the name of this disk item.
-     * @note		See Coding Rule 32, for information on the initialization of fields.
+     * Variable referencing the name of this primitive disk item.
      */
     protected String name = null;
 
     /**
-     * Return the name of this disk item.
-     * @note		See Coding Rule 19 for the Basic annotation.
+     * Return the name of this primitive disk item.
      */
-    @Raw
-    @Basic
+    @Raw @Basic
     public String getName() {
         return name;
     }
 
     /**
-     * Check whether the given name is a legal name for a disk item.
+     * Check whether the given name is a legal name for a primitive disk item.
      *
      * @param  	name
      *			The name to be checked
@@ -91,19 +88,19 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Set the name of this disk item to the given name.
+     * Set the name of this primitive disk item to the given name.
      *
      * @param   name
-     * 			The new name for this disk item.
+     * 			The new name for this primitive disk item.
      * @post    If the given name is valid, the name of
-     *          this disk item is set to the given name,
-     *          otherwise the name of the disk item is set to a valid name (the default).
+     *          this primitive disk item is set to the given name,
+     *          otherwise the name of the primitive disk item is set to a valid name (the default).
      *          | if (isValidName(name))
      *          |      then new.getName().equals(name)
      *          |      else new.getName().equals(getDefaultName())
      */
     @Raw @Model
-    void setName(String name) {
+    protected void setName(String name) {
         if (isValidName(name)) {
             this.name = name;
         } else {
@@ -112,7 +109,7 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Return the name for a new disk item which is to be used when the
+     * Return the name for a new primitive disk item which is to be used when the
      * given name is not valid.
      *
      * @return   A valid disk item name.
@@ -124,16 +121,16 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Change the name of this disk item to the given name.
+     * Change the name of this primitive disk item to the given name.
      *
      * @param	name
-     * 			The new name for this disk item.
-     * @effect  The name of this disk item is set to the given name,
+     * 			The new name for this primitive disk item.
+     * @effect  The name of this primitive disk item is set to the given name,
      * 			if this is a valid name, otherwise there is no change.
      * 			| if (isValidName(name))
      *          | then setName(name)
      * @effect  If the name is valid, the modification time
-     * 			of this disk item is updated.
+     * 			of this primitive disk item is updated.
      *          | if (isValidName(name))
      *          | then setModificationTime()
      */
