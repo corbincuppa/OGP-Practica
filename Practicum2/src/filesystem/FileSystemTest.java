@@ -84,7 +84,7 @@ public class FileSystemTest {
     @Test
     public void testFileStringIntBoolean_LegalCase() {
         assertEquals("bestand",fileStringIntBoolean.getName());
-        assertEquals(fileStringIntBoolean.getSize(),100);
+        assertEquals(100, fileStringIntBoolean.getSize());
         assertTrue(fileStringIntBoolean.isWritable());
         assertNull(fileStringIntBoolean.getModificationTime());
         assertFalse(timeBeforeConstruction.after(fileStringIntBoolean.getCreationTime()));
@@ -354,7 +354,7 @@ public class FileSystemTest {
     @Test
     public void testSetExtension() {
         File fileWithExtension = new File(null, "he",242, true, FileType.JAVA);
-        assertSame(fileWithExtension.getFileType().getExtension(), ".java");
+        assertSame(".java", fileWithExtension.getFileType().getExtension());
     }
 
 
@@ -373,22 +373,12 @@ public class FileSystemTest {
     }
 
     @Test
-    public void testDirStringBoolean_IllegalCase() {
-
-    }
-
-    @Test
     public void testDirString_LegalCase() {
         assertEquals(root, dirDirString.getParent());
         assertTrue(root.hasAsItem(dirDirString));
         assertEquals("x-ray", dirDirString.getName());
         assertTrue(dirDirString.isWritable());
         assertEquals(new ArrayList<PrimitiveDiskItem>(), dirDirString.getDiskItems());
-    }
-
-    @Test
-    public void testDirString_IllegalCase() {
-
     }
 
     @Test
@@ -401,11 +391,6 @@ public class FileSystemTest {
     }
 
     @Test
-    public void testStringBoolean_IllegalCase() {
-
-    }
-
-    @Test
     public void testString_LegalCase() {
         assertNull(dirString.getParent());
         assertTrue(dirString.isRoot());
@@ -415,13 +400,7 @@ public class FileSystemTest {
     }
 
     @Test
-    public void testString_IllegalCase() {
-
-    }
-
-    @Test
     public void testChangeNameResort_LegalCase() {
-        ArrayList<PrimitiveDiskItem> listBefore = root.getDiskItems();
         root.getDiskItems().add(dirDirString);
         root.getDiskItems().add(dirDirStringBoolean);
         dirDirString.changeName("abomination");

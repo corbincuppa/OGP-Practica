@@ -259,31 +259,31 @@ public abstract class PrimitiveDiskItem {
     /**
      * Make the parent directory of this disk item the given directory.
      *
-     * @effect  If the given directory is a valid parents directory and the parent of
+     * @effect  If the given directory is a valid parent directory and the parent of
      *          this directory is a valid parent, then this disk item is removed from
      *          its parent's contents.
-     *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
+     *          | if (hasValidParentDir(this)) && directory != null)
      *          | then dir.getDiskItems().remove(this)
-     * @effect  If the given directory is a valid parents directory and the parent of
+     * @effect  If the given directory is a valid parent directory and the parent of
      *          this disk item is a valid parent, then this disk item is added to the
      *          contents of the given directory.
-     *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
+     *          | if (hasValidParentDir(this)) && directory != null)
      *          | then directory.getDiskItems().add(this)
-     * @effect  If the given directory is a valid parents directory and the parent of
+     * @effect  If the given directory is a valid parent directory and the parent of
      *          this disk item is a valid parent, then the new parent of this disk item
      *          is set to the given directory.
-     *          | if (isValidParentDir(this.getParent()) && isValidParentDir(directory))
+     *          | if (hasValidParentDir(this)) && directory != null)
      *          | then this.parent = directory
      * @param directory
      *        The given directory which is to be set as the parent of this disk item.
      */
     @Raw @Model
     protected void setParent(Directory directory){
-        if (isValidParentDir(this.getParent()) && isValidParentDir(directory)) {
+        if (hasValidParentDir((Directory) this) && directory != null) {
             parent.getDiskItems().remove(this);
             directory.getDiskItems().add(this);
             this.parent = directory;
-        } else if (isValidParentDir(directory) && !isValidParentDir(this.getParent())) {
+        } else if (directory != null && !hasValidParentDir((Directory) this)) {
             directory.getDiskItems().add(this);
             this.parent = directory;
         }
@@ -300,9 +300,10 @@ public abstract class PrimitiveDiskItem {
      * Check if the given directory has a valid parent directory,
      * i.e. not a null parent.
      *
-     * @param dir
-     *        The given directory of which its parent is to be checked.
-     * @return
+     * @param   dir
+     *          The given directory of which its parent is to be checked.
+     * @return  True if the parent of the given directory is not null, false otherwise.
+     *          | result == dir.getParent() != null
      */
     protected boolean hasValidParentDir(Directory dir) {
         return dir.getParent() != null;

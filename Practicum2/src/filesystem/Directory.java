@@ -124,7 +124,7 @@ public class Directory extends DiskItem {
     /**
      * Variable referring to the list of disk items inside a directory.
      */
-    private ArrayList<PrimitiveDiskItem> diskItems = new ArrayList<>();
+    private final ArrayList<PrimitiveDiskItem> diskItems = new ArrayList<>();
 
     /**
      * Return the number of disk items inside a directory.
@@ -158,7 +158,7 @@ public class Directory extends DiskItem {
      */
     public PrimitiveDiskItem getItem(String nameItem) {
         for (PrimitiveDiskItem item : diskItems) {
-            if (item.getName() == nameItem) {
+            if (item.getName().equals(nameItem)) {
                 return item;
             }
         }
@@ -228,8 +228,8 @@ public class Directory extends DiskItem {
      *          | isDirectOrIndirectChildOf()
      */
     public void addItem(PrimitiveDiskItem item) throws DirectoryContainsSelfException, DiskItemNotWritableException {
-        if (isWritable()) {
-            if (!item.isDirectOrIndirectChildOf(this)) {
+        if (this.isWritable()) {
+            if (!this.isDirectOrIndirectChildOf(this)) {
                 item.setParent(this);
                 this.sortDiskItems();
                 setModificationTime();
@@ -318,7 +318,7 @@ public class Directory extends DiskItem {
     /**
      * Variable registering whether this directory is a root directory.
      */
-    private boolean root = true;
+    private boolean root;
 
     /**
      * Check whether this directory is a root directory.
@@ -347,6 +347,7 @@ public class Directory extends DiskItem {
      *         | if !dir.isRoot()
      *         | then result == dir.getParent() != null.
      */
+    @Override
     protected boolean hasValidParentDir(Directory dir) {
         if (!dir.isRoot()) {
             return dir.getParent() != null;
