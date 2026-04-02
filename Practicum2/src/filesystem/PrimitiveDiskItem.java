@@ -368,6 +368,25 @@ public abstract class PrimitiveDiskItem {
         return (Directory) child;
     }
 
+    /**
+     * Move this primitive disk item to the given directory
+     *
+     * @param   targetDirectory
+     * 			The new directory for this primitive disk item.
+     * @effect  If the given targetDirectory is valid, the directory of
+     *          this primitive disk item is set to the given directory,
+     *          | if (targetDirectory != null)
+     *          |      then new.getParent().equals(targetDirectory)
+     */
+    public void move(Directory targetDirectory){
+        if (targetDirectory != null) {
+            Directory parent = this.getParent();
+            parent.removeItem(this);
+            targetDirectory.addItem(this);
+            this.setParent(targetDirectory);
+        }
+    }
+
     /**********************************************************
      * destructors
      **********************************************************/
