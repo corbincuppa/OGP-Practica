@@ -352,14 +352,6 @@ public class Directory extends DiskItem {
         this.setParent(null);
     }
 
-    public Directory getRoot(){
-        Directory parent = this.getParent();
-        while (parent != null) {
-            parent = parent.getParent();
-        }
-        return parent;
-    }
-
 
 
     /**********************************************************

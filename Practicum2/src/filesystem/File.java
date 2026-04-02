@@ -72,26 +72,6 @@ public class File extends DiskItem {
     }
 
 
-    /**
-     * Initialize a new file with given name.
-     *
-     * @param   name
-     *          The name of the new file.
-     * @effect  This new file is initialized with the given name, a zero size
-     *          and true writability.
-     *         | this(name,0,true)
-     */
-    @Raw
-    public File(String name, FileType fileType) {
-        //dir?
-        super(name);
-        setSize(0);
-        setWritable(true);
-        this.fileType = fileType;
-    }
-
-
-
     /**********************************************************
      * file type
      **********************************************************/
