@@ -225,34 +225,29 @@ public class File extends DiskItem {
     }
 
     /**********************************************************
-     * destructors
+     * destructor
      **********************************************************/
 
     /**
-     * Remove a given directory.
+     * Remove a given file.
      *
-     * @param   file
-     *          The given directory to be removed.
-     * @effect  If the given directory is writable and its contents are empty,
-     *          the given directory is removed and the modification time of the
+     * @effect  If the given file is writable,
+     *          the given file is removed and the modification time of the
      *          parent directory is set to the current time.
-     *          | if (isWritable() && getDiskItems() == null)
+     *          | if (isWritable())
      *          | then parent.setModificationTime()
      * @throws  DiskItemNotWritableException
-     *          The given directory is not writable.
+     *          The given file is not writable.
      *          | isWritable()
-     * @throws  DirectoryNotEmptyException
-     *          The given directory is not empty.
-     *          | getDiskItems() != null
      */
-    public void destructorFile(File file) {
-        if (file.isWritable()) {
-            Directory parent = file.getParent();
-            parent.removeItem(file);
+    public void destructorFile() {
+        if (this.isWritable()) {
+            Directory parent = this.getParent();
+            parent.removeItem(this);
             parent.setModificationTime();
             }
         else {
-            throw new DiskItemNotWritableException(file);
+            throw new DiskItemNotWritableException(this);
         }
     }
 

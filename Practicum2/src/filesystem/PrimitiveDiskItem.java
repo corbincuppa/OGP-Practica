@@ -426,8 +426,17 @@ public abstract class PrimitiveDiskItem {
 
 
     /**********************************************************
-     * destructors
+     * destructor
      **********************************************************/
 
+    public void destructor() {
+        if (this instanceof File) {
+            ((File) this).destructorFile();
+        } else if (this instanceof Directory) {
+            ((Directory) this).destructorDir();
+        } else if (this instanceof Link) {
+            ((Link) this).destructorLink();
+        }
+    }
 
 }

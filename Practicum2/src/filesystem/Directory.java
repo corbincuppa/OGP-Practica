@@ -402,14 +402,12 @@ public class Directory extends DiskItem {
 
 
     /**********************************************************
-     * destructors
+     * destructor
      **********************************************************/
 
     /**
      * Remove a given directory.
      *
-     * @param   dir
-     *          The given directory to be removed.
      * @effect  If the given directory is writable and its contents are empty,
      *          the given directory is removed and the modification time of the
      *          parent directory is set to the current time.
@@ -422,19 +420,19 @@ public class Directory extends DiskItem {
      *          The given directory is not empty.
      *          | getDiskItems() != null
      */
-    public void destructorDir(Directory dir) {
-        if (dir.isWritable()) {
-            if (dir.getDiskItems() == null) {
-                diskItems.remove(dir);
-                Directory parent = dir.getParent();
+    public void destructorDir() {
+        if (this.isWritable()) {
+            if (this.getDiskItems() == null) {
+                diskItems.remove(this);
+                Directory parent = this.getParent();
                 parent.setModificationTime();
             }
             else{
-                throw new DirectoryNotEmptyException(dir);
+                throw new DirectoryNotEmptyException(this);
             }
         }
         else {
-            throw new DiskItemNotWritableException(dir);
+            throw new DiskItemNotWritableException(this);
         }
     }
 

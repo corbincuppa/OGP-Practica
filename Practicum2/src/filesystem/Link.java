@@ -41,7 +41,19 @@ public class Link extends PrimitiveDiskItem {
      protected DiskItem linkedItem = null ;
 
      /**********************************************************
-     * destructors
+     * destructor
      **********************************************************/
 
+    /**
+     * Remove a given link.
+     *
+     * @effect  The given link is removed and the modification time of the
+     *          parent directory is set to the current time.
+     *          then parent.setModificationTime()
+     */
+    public void destructorLink() {
+        Directory parent = this.getParent();
+        parent.removeItem(this);
+        parent.setModificationTime();
+    }
 }
