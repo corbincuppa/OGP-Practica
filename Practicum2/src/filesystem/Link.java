@@ -2,13 +2,19 @@ package filesystem;
 
 public class Link extends PrimitiveDiskItem {
     /**********************************************************
-     * constructors
+     * constructor
      **********************************************************/
 
-    /*
-     * @param parent
-     * @param name
-     * */
+    /**
+     * Initialize a directory with given parent, name and writability.
+     *
+     * @param   parent
+     *          The directory containing the directory
+     * @param  	name
+     *        	The name of the directory
+     * @param   linkedItem
+     *          The disk item(s) the link is linked to
+     */
     public Link(Directory parent, String name, DiskItem linkedItem) {
         super(parent, name);
         this.linkedItem = linkedItem;
