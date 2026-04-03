@@ -409,6 +409,23 @@ public abstract class PrimitiveDiskItem {
         }
         return absolutePath.toString();
     }
+    /**
+     * Return the total disk usage of this primitive disk item
+     *
+     */
+    public int getTotalDiskUsage() {
+        int totalDiskUsage = 0;
+        if (this instanceof File) {
+            totalDiskUsage = ((File) this).getSize();
+        } else if (this instanceof Directory) {
+            totalDiskUsage = ((Directory) this).getSize();
+        } else if (this instanceof Link) {
+            totalDiskUsage = 0;
+        }
+        return totalDiskUsage;
+    }
+
+
     /**********************************************************
      * destructors
      **********************************************************/
