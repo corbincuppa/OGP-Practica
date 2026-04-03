@@ -30,18 +30,58 @@ public class Directory extends DiskItem {
      * Constructors
      **********************************************************/
 
+    /**
+     * Initialize a directory with given parent, name and writability.
+     *
+     * @param   parent
+     *          The directory containing the directory
+     * @param  	name
+     *        	The name of the directory
+     * @param  	writable
+     *         	The writability of the directory.
+     */
     public Directory(Directory parent, String name, boolean writable){
         super(parent, name, writable);
     }
 
+    /**
+     * Initialize a directory with given parent, name and true writability.
+     *
+     * @param   parent
+     *          The directory containing the directory
+     * @param  	name
+     *        	The name of the directory
+     * @effect  This new file is initialized with the given parent, name and
+     * 	        true writability
+     *         | this(dir, name, true)
+     */
     public Directory(Directory parent, String name){
         this(parent, name,true);
     }
 
+    /**
+     * Initialize a directory with parent null, given name and writability.
+     *
+     * @param  	name
+     *        	The name of the directory
+     * @param  	writable
+     *         	The writability of the directory.
+     * @effect  This new file is initialized with parent null, the given name and writability
+     *         | this(null, name, writable)
+     */
     public Directory(String name, boolean writable){
         this(null, name,writable);
     }
 
+    /**
+     * Initialize a directory with parent null, given name and true writability.
+     *
+     * @param  	name
+     *        	The name of the directory
+     * @effect  This new file is initialized with the given name, parent null and
+     * 	        true writability
+     *         | this(null, name, true)
+     */
     public Directory(String name){
         this(null, name,true);
     }
