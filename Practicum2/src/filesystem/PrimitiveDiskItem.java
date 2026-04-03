@@ -273,8 +273,7 @@ public abstract class PrimitiveDiskItem {
      **********************************************************/
 
     /**
-     * The parents directory of this disk item, thus the directory which contains
-     * this disk item cannot be null.
+     * The parents directory of this disk item
      */
     protected Directory parent = null;
 
