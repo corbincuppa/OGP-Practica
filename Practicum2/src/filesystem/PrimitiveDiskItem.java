@@ -3,6 +3,7 @@ package filesystem;
 import be.kuleuven.cs.som.annotate.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 /**
  * A class of disk items.
@@ -14,7 +15,7 @@ import java.util.Date;
  * @invar   Each disk item must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
  * @invar   Each disk item must have a valid parent directory.
- *          | hasValidParentDir()
+ *          | isValidParent()
  *
  * @author  Adelina Vozianu
  * @author  Boglárka Csorba-Vitus
@@ -26,8 +27,32 @@ public abstract class PrimitiveDiskItem {
      * constructors
      **********************************************************/
 
-    public PrimitiveDiskItem(Directory parent, String name) {
-        setParent(parent);
+    /**
+     * Initialize a new primitive disk item with given parent and name.
+     *
+     * @param   dir
+     *        	The directory containing the new primitive disk item
+     * @param  	name
+     *         	The name of the primitive disk item
+     * @effect  The name of the primitive disk item is set to the given name.
+     * 			If the given name is not valid, a default name is set.
+     *          | setName(name)
+     * @effect	The directory is set to the given directory
+     * 			| setParent(dir)
+     * @post    The new creation time of this primitive disk item is initialized to some time during
+     *          constructor execution.
+     *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
+     *          | (new.getCreationTime().getTime() <= (new System).currentTimeMillis())
+     * @post    The primitive disk item has no time of last modification.
+     *          | new.getModificationTime() == null
+     * @note	The constructor is annotated raw because at the start of the execution, not all fields are
+     * 			defaulted to a value that is accepted by the invariants.
+     * 			E.g. the name is defaulted to null, which is not allowed,
+     * 			thus the object is in a raw state upon entry of the constructor.
+     */
+    @Raw
+    public PrimitiveDiskItem(Directory dir, String name) {
+        setParent(dir);
         setName(name);
     }
 
@@ -36,23 +61,20 @@ public abstract class PrimitiveDiskItem {
      **********************************************************/
 
     /**
-     * Variable referencing the name of this disk item.
-     * @note		See Coding Rule 32, for information on the initialization of fields.
+     * Variable referencing the name of this primitive disk item.
      */
     protected String name = null;
 
     /**
-     * Return the name of this disk item.
-     * @note		See Coding Rule 19 for the Basic annotation.
+     * Return the name of this primitive disk item.
      */
-    @Raw
-    @Basic
+    @Raw @Basic
     public String getName() {
         return name;
     }
 
     /**
-     * Check whether the given name is a legal name for a disk item.
+     * Check whether the given name is a legal name for a primitive disk item.
      *
      * @param  	name
      *			The name to be checked
@@ -67,19 +89,19 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Set the name of this disk item to the given name.
+     * Set the name of this primitive disk item to the given name.
      *
      * @param   name
-     * 			The new name for this disk item.
+     * 			The new name for this primitive disk item.
      * @post    If the given name is valid, the name of
-     *          this disk item is set to the given name,
-     *          otherwise the name of the disk item is set to a valid name (the default).
+     *          this primitive disk item is set to the given name,
+     *          otherwise the name of the primitive disk item is set to a valid name (the default).
      *          | if (isValidName(name))
      *          |      then new.getName().equals(name)
      *          |      else new.getName().equals(getDefaultName())
      */
     @Raw @Model
-    void setName(String name) {
+    protected void setName(String name) {
         if (isValidName(name)) {
             this.name = name;
         } else {
@@ -88,7 +110,7 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Return the name for a new disk item which is to be used when the
+     * Return the name for a new primitive disk item which is to be used when the
      * given name is not valid.
      *
      * @return   A valid disk item name.
@@ -100,16 +122,16 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Change the name of this disk item to the given name.
+     * Change the name of this primitive disk item to the given name.
      *
      * @param	name
-     * 			The new name for this disk item.
-     * @effect  The name of this disk item is set to the given name,
+     * 			The new name for this primitive disk item.
+     * @effect  The name of this primitive disk item is set to the given name,
      * 			if this is a valid name, otherwise there is no change.
      * 			| if (isValidName(name))
      *          | then setName(name)
      * @effect  If the name is valid, the modification time
-     * 			of this disk item is updated.
+     * 			of this primitive disk item is updated.
      *          | if (isValidName(name))
      *          | then setModificationTime()
      */
@@ -167,8 +189,8 @@ public abstract class PrimitiveDiskItem {
     protected Date modificationTime = null;
 
     /**
-     * Return the time at which this disk item was last modified, that is
-     * at which the name or size was last changed. If this disk item has
+     * Return the time at which this primitive disk item was last modified, that is
+     * at which the name or size was last changed. If this primitive disk item has
      * not yet been modified after construction, null is returned.
      */
     @Raw @Basic
@@ -177,7 +199,7 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Check whether this disk item can have the given date as modification time.
+     * Check whether this primitive disk item can have the given date as modification time.
      *
      * @param	date
      * 			The date to check.
@@ -196,7 +218,7 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Set the modification time of this disk item to the current time.
+     * Set the modification time of this primitive disk item to the current time.
      *
      * @post   The new modification time is effective.
      *         | new.getModificationTime() != null
@@ -214,16 +236,16 @@ public abstract class PrimitiveDiskItem {
     }
 
     /**
-     * Return whether this disk item and the given other disk item have an
+     * Return whether this primitive disk item and the given other primitive disk item have an
      * overlapping use period.
      *
      * @param 	other
      *        	The other disk item to compare with.
-     * @return 	False if the other disk item is not effective
+     * @return 	False if the other primitive disk item is not effective
      * 			False if the prime object does not have a modification time
-     * 			False if the other disk item is effective, but does not have a modification time
-     * 			otherwise, true if and only if the open time intervals of this disk item and
-     * 			the other disk item overlap
+     * 			False if the other primitive disk item is effective, but does not have a modification time
+     * 			otherwise, true if and only if the open time intervals of this primitive disk item and
+     * 			the other primitive disk item overlap
      *        	| if (other == null) then result == false else
      *        	| if ((getModificationTime() == null)||
      *        	|       other.getModificationTime() == null)
@@ -251,39 +273,50 @@ public abstract class PrimitiveDiskItem {
      **********************************************************/
 
     /**
-     * The parents directory of this disk item, thus the directory which contains
-     * this disk item. Cannot be null.
+     * The parents directory of this disk item
      */
-    protected Directory parent;
+    protected Directory parent = null;
 
     /**
-     * Make the parent directory of this disk item the given directory.
+     * Check if the parent directory is valid for this primitive disk item.
      *
-     * @effect  If the given directory is a valid parent directory and the parent of
-     *          this directory is a valid parent, then this disk item is removed from
+     * @return  True if the parent is not null
+     *          except if this primitive disk item is a directory.
+     *          | if ((this instanceof File) || (this instanceof Link)){
+     *          | then return (parent != null);
+     *          | else return true ;
+     */
+    protected boolean isValidParent(Directory parent) {
+        if ((this instanceof File) || (this instanceof Link)){
+            return (parent != null);
+        } else {
+            return true ;
+        }
+    }
+
+    /**
+     * Make the parent directory of this primitive disk item the given directory.
+     *
+     * @effect  If the given directory is a valid parent directory then this disk item is removed from
      *          its parent's contents.
-     *          | if (hasValidParentDir(this)) && directory != null)
+     *          | if (isValidParent(this))
      *          | then dir.getDiskItems().remove(this)
-     * @effect  If the given directory is a valid parent directory and the parent of
-     *          this disk item is a valid parent, then this disk item is added to the
+     * @effect  If the given directory is a valid parent directory then this disk item is added to the
      *          contents of the given directory.
-     *          | if (hasValidParentDir(this)) && directory != null)
+     *          | if (isValidParent(this))
      *          | then directory.getDiskItems().add(this)
-     * @effect  If the given directory is a valid parent directory and the parent of
-     *          this disk item is a valid parent, then the new parent of this disk item
+     * @effect  If the given directory is a valid parent directory, then the new parent of this disk item
      *          is set to the given directory.
-     *          | if (hasValidParentDir(this)) && directory != null)
-     *          | then this.parent = directory
+     *          | if (isValidParent(this))
+     *          | then this.parent = directory initialize
      * @param directory
-     *        The given directory which is to be set as the parent of this disk item.
+     *        The given directory which is to be set as the parent of this primitive disk item.
      */
     @Raw @Model
     protected void setParent(Directory directory){
-        if (hasValidParentDir((Directory) this) && directory != null) {
+        if (this.isValidParent(directory)) {
+            Directory parent = this.getParent();
             parent.getDiskItems().remove(this);
-            directory.getDiskItems().add(this);
-            this.parent = directory;
-        } else if (directory != null && !hasValidParentDir((Directory) this)) {
             directory.getDiskItems().add(this);
             this.parent = directory;
         }
@@ -296,19 +329,18 @@ public abstract class PrimitiveDiskItem {
         return this.parent;
     }
 
-    /**
-     * Check if the given directory has a valid parent directory,
-     * i.e. not a null parent.
-     *
-     * @param   dir
-     *          The given directory of which its parent is to be checked.
-     * @return  True if the parent of the given directory is not null, false otherwise.
-     *          | result == dir.getParent() != null
-     */
-    protected boolean hasValidParentDir(Directory dir) {
-        return dir.getParent() != null;
-    }
 
+    /**
+     * Check whether this primitive disk item is a direct or indirect child of the given directory
+     *
+     * @param  	directory
+     *          The directory to check against
+     * @return 	True if this primitive disk item is contained somewhere in the directory tree of the given directory
+     *         	|result == (exists Directory parent;
+     *          |(parent == this.getParent() && parent.equals(directory)) ||
+     *          |(parent == this.getParent().getParent() && parent.equals(directory)) ||
+     *          | ...
+     */
     public boolean isDirectOrIndirectChildOf(Directory directory){
         Directory parent = this.getParent();
         while (parent != null) {
@@ -319,5 +351,83 @@ public abstract class PrimitiveDiskItem {
         }
         return false;
     }
+
+    /**
+     * Get the root directory of the directory tree of the given directory
+     *
+     * @return 	The root directory of this primitive disk item
+     *          | result == (result.getParent == null)
+     */
+    public Directory getRoot(){
+        PrimitiveDiskItem child = this;
+        Directory parent = this.getParent();
+        while (parent != null) {
+            child = parent;
+            parent = parent.getParent();
+        }
+        return (Directory) child;
+    }
+
+    /**
+     * Move this primitive disk item to the given directory
+     *
+     * @param   targetDirectory
+     * 			The new directory for this primitive disk item.
+     * @effect  If the given targetDirectory is valid, the directory of
+     *          this primitive disk item is set to the given directory,
+     *          | if (targetDirectory != null)
+     *          |      then new.getParent().equals(targetDirectory)
+     */
+    public void move(Directory targetDirectory){
+        if (targetDirectory != null) {
+            Directory parent = this.getParent();
+            parent.removeItem(this);
+            targetDirectory.addItem(this);
+            this.setParent(targetDirectory);
+        }
+    }
+
+    /**
+     * Return the absolute path to this primitive disk item
+     *
+     * @return  the absolute path as a string, e.g., {@code "/rootDir/subDir/file.pdf"}
+     */
+    public String getAbsolutePath(){
+        LinkedList<String> path = new LinkedList<>();
+        path.add(this.getName());
+        Directory parent = this.getParent();
+        while (parent != null) {
+            path.add(parent.getName());
+            parent = parent.getParent();
+        }
+        StringBuilder absolutePath = new StringBuilder();
+        while (!path.isEmpty()){
+            String laatste = path.removeLast();
+            absolutePath.append("/");
+            absolutePath.append(laatste);
+        }
+        return absolutePath.toString();
+    }
+    /**
+     * Return the total disk usage of this primitive disk item
+     *
+     */
+    public int getTotalDiskUsage() {
+        int totalDiskUsage = 0;
+        if (this instanceof File) {
+            totalDiskUsage = ((File) this).getSize();
+        } else if (this instanceof Directory) {
+            totalDiskUsage = ((Directory) this).getSize();
+        } else if (this instanceof Link) {
+            totalDiskUsage = 0;
+        }
+        return totalDiskUsage;
+    }
+
+
+    /**********************************************************
+     * destructors
+     **********************************************************/
+
 
 }

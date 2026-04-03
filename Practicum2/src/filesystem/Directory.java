@@ -30,28 +30,60 @@ public class Directory extends DiskItem {
      * Constructors
      **********************************************************/
 
+    /**
+     * Initialize a directory with given parent, name and writability.
+     *
+     * @param   parent
+     *          The directory containing the directory
+     * @param  	name
+     *        	The name of the directory
+     * @param  	writable
+     *         	The writability of the directory.
+     */
     public Directory(Directory parent, String name, boolean writable){
-        super(parent, name);
-        setWritable(writable);
-        root = false;
+        super(parent, name, writable);
     }
 
+    /**
+     * Initialize a directory with given parent, name and true writability.
+     *
+     * @param   parent
+     *          The directory containing the directory
+     * @param  	name
+     *        	The name of the directory
+     * @effect  This new file is initialized with the given parent, name and
+     * 	        true writability
+     *         | this(dir, name, true)
+     */
     public Directory(Directory parent, String name){
-        super(parent, name);
-        setWritable(true);
-        root = false;
+        this(parent, name,true);
     }
 
+    /**
+     * Initialize a directory with parent null, given name and writability.
+     *
+     * @param  	name
+     *        	The name of the directory
+     * @param  	writable
+     *         	The writability of the directory.
+     * @effect  This new file is initialized with parent null, the given name and writability
+     *         | this(null, name, writable)
+     */
     public Directory(String name, boolean writable){
-        super(name);
-        setWritable(writable);
-        root = true;
+        this(null, name,writable);
     }
 
+    /**
+     * Initialize a directory with parent null, given name and true writability.
+     *
+     * @param  	name
+     *        	The name of the directory
+     * @effect  This new file is initialized with the given name, parent null and
+     * 	        true writability
+     *         | this(null, name, true)
+     */
     public Directory(String name){
-        super(name);
-        setWritable(true);
-        root = true;
+        this(null, name,true);
     }
 
 
@@ -61,25 +93,25 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Change the name of this disk item to the given name.
+     * Change the name of this directory to the given name.
      *
      * @param	name
-     * 			The new name for this disk item.
-     * @effect  The name of this disk item is set to the given name,
-     * 			if this is a valid name and the disk item is writable,
+     * 			The new name for this directory.
+     * @effect  The name of this directory is set to the given name,
+     * 			if this is a valid name and the directory is writable,
      * 			otherwise there is no change.
      * 			| if (isValidName(name) && isWritable())
      *          | then setName(name)
-     * @effect  If the name is valid and the disk item is writable, the modification time
-     * 			of this disk item is updated.
+     * @effect  If the name is valid and the directory is writable, the modification time
+     * 			of this directory is updated.
      *          | if (isValidName(name) && isWritable())
      *          | then setModificationTime()
-     * @effect  If the name is valid and the disk item is writable, the order of the items
+     * @effect  If the name is valid and the directory is writable, the order of the items
      *          in this directory is resorted.
      *          | if (isValidName(name) && isWritable())
      *          | then sortDiskItems()
      * @throws  DiskItemNotWritableException(this)
-     *          This disk item is not writable
+     *          This directory is not writable
      *          | ! isWritable()
      */
     @Override
@@ -101,9 +133,12 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Return the size of this disk item (in bytes).
+     * Return the size of this directory (in bytes).
+     *
+     * @return	The sum of the sizes of items in the directory
+     * 			| result == sum {((File)item).getSize()}
      */
-    @Raw @Basic @Override
+    @Raw @Basic
     public int getSize() {
         int sum = 0;
         for(PrimitiveDiskItem item: diskItems){
@@ -244,6 +279,34 @@ public class Directory extends DiskItem {
     }
 
     /**
+     * Remove a given item.
+     *
+     * @param   item
+     *          The given file to be removed from its parent directory.
+     * @effect  If the parent directory is writable, then the item is removed
+     *          from the contents of the directory.
+     *          | if (file.getParent().isWritable() )
+     *          | then diskItems.remove(item)
+     * @effect  If this directory is writable, and it contains the given item,
+     *          then the modification time of this disk item is updated.
+     *          | if (isWritable() && diskItems.contains(item))
+     *          | then setModificationTime()
+     * @throws  DiskItemNotWritableException
+     *          This parent directory is not writable.
+     *          | file.getParent().isWritable()
+     */
+    public void removeItem(PrimitiveDiskItem item) throws DiskItemNotWritableException {
+        Directory parent = item.getParent();
+        if (parent.isWritable()) {
+            parent.getDiskItems().remove(item);
+            setModificationTime();
+        }
+        else{
+            throw new DiskItemNotWritableException(parent);
+        }
+    }
+
+    /**
      * Add a list of disk items to this directory.
      *
      * @param list
@@ -316,11 +379,6 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Variable registering whether this directory is a root directory.
-     */
-    private boolean root;
-
-    /**
      * Check whether this directory is a root directory.
      *
      * @return True if this directory has no parents, false otherwise.
@@ -330,64 +388,22 @@ public class Directory extends DiskItem {
         return this.getParent() == null;
     }
 
-
-
-    /**********************************************************
-     * parent
-     **********************************************************/
-
     /**
-     * Check if the given directory has a valid parent directory,
-     * i.e. not a null parent, unless the given directory is a root directory.
+     * Make the directory the root directory.
      *
-     * @param dir
-     *        The given directory of which its parent is to be checked.
-     * @return True is the given directory is not a root directory and its parent
-     *         is not equal to a null pointer, false if the parent is a null pointer.
-     *         | if !dir.isRoot()
-     *         | then result == dir.getParent() != null.
+     * @effect  The parent of this directory equals null
+     *          | parent == this.getParent() && parent.equals(null)
      */
-    @Override
-    protected boolean hasValidParentDir(Directory dir) {
-        if (!dir.isRoot()) {
-            return dir.getParent() != null;
-        }
-        return true;
+    public void makeRoot(){
+        Directory parent = this.getParent();
+        parent.removeItem(this);
+        this.setParent(null);
     }
-
 
 
     /**********************************************************
      * destructors
      **********************************************************/
-
-    /**
-     * Remove a given file.
-     *
-     * @param   file
-     *          The given file to be removed from its parent directory.
-     * @effect  If the parent directory is writable, then the item is removed
-     *          from the contents of the directory.
-     *          | if (file.getParent().isWritable() )
-     *          | then diskItems.remove(item)
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the modification time of this disk item is updated.
-     *          | if (isWritable() && diskItems.contains(item))
-     *          | then setModificationTime()
-     * @throws  DiskItemNotWritableException
-     *          This parent directory is not writable.
-     *          | file.getParent().isWritable()
-     */
-    public void removeFile(File file) throws DiskItemNotWritableException {
-        Directory parent = file.getParent();
-        if (parent.isWritable()) {
-            parent.getDiskItems().remove(file);
-            setModificationTime();
-        }
-        else{
-            throw new DiskItemNotWritableException(parent);
-        }
-    }
 
     /**
      * Remove a given directory.
@@ -406,7 +422,7 @@ public class Directory extends DiskItem {
      *          The given directory is not empty.
      *          | getDiskItems() != null
      */
-    public void removeDir(Directory dir) {
+    public void destructorDir(Directory dir) {
         if (dir.isWritable()) {
             if (dir.getDiskItems() == null) {
                 diskItems.remove(dir);
@@ -419,63 +435,6 @@ public class Directory extends DiskItem {
         }
         else {
             throw new DiskItemNotWritableException(dir);
-        }
-    }
-
-    /**
-     * Remove a given link
-     *
-     * @param link
-     *        The link to be removed.
-     * @effect  If the parent directory of the given link is writable, then
-     *          the given link is removed and the modification time of the
-     *          parent directory is set to the current time.
-     *          | if (link.getParent().isWritable())
-     *          | then link.getParent().setModificationTime()
-     * @throws  DiskItemNotWritableException
-     *          The parent directory of the given link is not writable.
-     *          | link.getParent().isWritable()
-     */
-    public void removeLink(Link link) {
-        Directory parent = link.getParent();
-        if (parent.isWritable()) {
-            ArrayList<PrimitiveDiskItem> list = parent.getDiskItems();
-            list.remove(link);
-            parent.setModificationTime();
-        }
-        else {
-            throw new DiskItemNotWritableException(parent);
-        }
-    }
-
-    /**
-     * Remove a given disk item.
-     *
-     * @param   diskItem
-     *          The given item to be removed from its parent directory.
-     * @effect  If the parent directory of the given disk item is writable,
-     *          then the item is removed from the contents of the directory.
-     *          | if (diskItem.getParent().isWritable() )
-     *          | then diskItems.remove(item)
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the item's parent is set to null.
-     *          | if (isWritable() && diskItems.contains(item))
-     *          | then setParent(null)
-     * @effect  If this directory is writable, and it contains the given item,
-     *          then the modification time of this disk item is updated.
-     *          | if (isWritable() && diskItems.contains(item))
-     *          | then setModificationTime()
-     * @throws  DiskItemNotWritableException
-     *          The parent directory is not writable.
-     *          | diskItem.getParent().isWritable()
-     */
-    public void remove(PrimitiveDiskItem diskItem) {
-        if (diskItem instanceof File) {
-            removeFile((File) diskItem);
-        } else if (diskItem instanceof Directory) {
-            removeDir((Directory) diskItem);
-        } else if (diskItem instanceof Link) {
-            removeLink((Link) diskItem);
         }
     }
 
