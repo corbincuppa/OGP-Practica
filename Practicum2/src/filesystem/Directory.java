@@ -93,25 +93,25 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Change the name of this disk item to the given name.
+     * Change the name of this directory to the given name.
      *
      * @param	name
-     * 			The new name for this disk item.
-     * @effect  The name of this disk item is set to the given name,
-     * 			if this is a valid name and the disk item is writable,
+     * 			The new name for this directory.
+     * @effect  The name of this directory is set to the given name,
+     * 			if this is a valid name and the directory is writable,
      * 			otherwise there is no change.
      * 			| if (isValidName(name) && isWritable())
      *          | then setName(name)
-     * @effect  If the name is valid and the disk item is writable, the modification time
-     * 			of this disk item is updated.
+     * @effect  If the name is valid and the directory is writable, the modification time
+     * 			of this directory is updated.
      *          | if (isValidName(name) && isWritable())
      *          | then setModificationTime()
-     * @effect  If the name is valid and the disk item is writable, the order of the items
+     * @effect  If the name is valid and the directory is writable, the order of the items
      *          in this directory is resorted.
      *          | if (isValidName(name) && isWritable())
      *          | then sortDiskItems()
      * @throws  DiskItemNotWritableException(this)
-     *          This disk item is not writable
+     *          This directory is not writable
      *          | ! isWritable()
      */
     @Override
