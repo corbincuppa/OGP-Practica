@@ -133,7 +133,10 @@ public class Directory extends DiskItem {
      **********************************************************/
 
     /**
-     * Return the size of this disk item (in bytes).
+     * Return the size of this directory (in bytes).
+     *
+     * @return	The sum of the sizes of items in the directory
+     * 			| result == sum {((File)item).getSize()}
      */
     @Raw @Basic
     public int getSize() {
@@ -385,37 +388,17 @@ public class Directory extends DiskItem {
         return this.getParent() == null;
     }
 
+    /**
+     * Make the directory the root directory.
+     *
+     * @effect  The parent of this directory equals null
+     *          | parent == this.getParent() && parent.equals(null)
+     */
     public void makeRoot(){
         Directory parent = this.getParent();
         parent.removeItem(this);
         this.setParent(null);
     }
-
-
-
-    /**********************************************************
-     * parent
-     **********************************************************/
-
-    /**
-     * Check if the given directory has a valid parent directory,
-     * i.e. not a null parent, unless the given directory is a root directory.
-     *
-     * @param dir
-     *        The given directory of which its parent is to be checked.
-     * @return True is the given directory is not a root directory and its parent
-     *         is not equal to a null pointer, false if the parent is a null pointer.
-     *         | if !dir.isRoot()
-     *         | then result == dir.getParent() != null.
-     */
-    @Override
-    protected boolean hasValidParentDir(Directory dir) {
-        if (!dir.isRoot()) {
-            return dir.getParent() != null;
-        }
-        return true;
-    }
-
 
 
     /**********************************************************
